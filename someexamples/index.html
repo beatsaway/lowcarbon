@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Example ideas</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.45;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .top {
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    .top a { color: #111; font-weight: 700; }
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .dots button {
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: 1px solid #111;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+    }
+    .dots button.on { background: #111; }
+    .title {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .explain {
+      margin: 0 0 14px;
+      font-size: 16px;
+      font-weight: 700;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .pic {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+    }
+    .links {
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .links a { color: #111; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="top"><a href="../index.html">← Home</a></p>
+    <div class="dots" id="dots" aria-label="Ideas"></div>
+    <h1 class="title" id="title"></h1>
+    <p class="explain" id="explain"></p>
+    <img class="pic" id="pic" alt="" />
+    <p class="links"><a href="../inspirations.html">100 inspiration ideas</a></p>
+  </div>
+
+  <script>
+    const IDEAS = [
+      {
+        title: "Nuclear powered seawater desalination plant",
+        img: "images/image3.png",
+        text:
+          "I want to build a desalination plant for island families to drink clean fresh water.\n" +
+          "It will have a salt-to-fresh water machine for making drinking water.\n" +
+          "It is powered by nuclear electricity: strong clean power for the pumps.\n" +
+          "It will have a seaweed and coral farm for healthier ocean life.\n" +
+          "It is powered by nuclear leftover heat: warm steady water for the ocean farm."
+      },
+      {
+        title: "Nuclear powered residential building",
+        img: "images/image7.png",
+        text:
+          "I want to build a residential building for families to live with less carbon smoke.\n" +
+          "It will have a lift for getting upstairs easily.\n" +
+          "It is powered by nuclear electricity: clean power for lifts, lights, and air-con.\n" +
+          "It will have a cool lobby for resting on hot days.\n" +
+          "It is powered by nuclear leftover heat: reused heat for hot water at home."
+      },
+      {
+        title: "Nuclear powered desalination and hydrogen complex",
+        img: "images/image2.png",
+        text:
+          "I want to build an energy complex for city workers to get clean water and clean fuel.\n" +
+          "It will have a desalination plant for making fresh water from the sea.\n" +
+          "It is powered by nuclear electricity: clean power for the water machines.\n" +
+          "It will have a hydrogen pipeline for sending clean fuel across the city.\n" +
+          "It is powered by nuclear electricity: used to make hydrogen without smoke."
+      },
+      {
+        title: "Nuclear powered umbrella",
+        img: "images/image4.png",
+        text:
+          "I want to build a smart umbrella for students to stay cool while waiting outside.\n" +
+          "It will have a shade canopy for blocking hot sun.\n" +
+          "It is powered by nuclear electricity and solar: clean power for a small cool fan.\n" +
+          "It will have a phone charging pad for topping up devices.\n" +
+          "It is powered by battery storage charged by clean power: ready when people need it."
+      },
+      {
+        title: "Nuclear powered cargo centre",
+        img: "images/image6.png",
+        text:
+          "I want to build a cargo centre for delivery workers to move boxes with fewer dirty trucks.\n" +
+          "It will have autonomous rovers for carrying parcels indoors.\n" +
+          "It is powered by nuclear electricity: clean power for robots all day and night.\n" +
+          "It will have a drone launch pad for fast outdoor deliveries.\n" +
+          "It is powered by nuclear and battery storage: drones charge at the clean nest."
+      },
+      {
+        title: "Nuclear powered drone with radar",
+        img: "images/image10.png",
+        text:
+          "I want to build a radar drone for rescue teams to check weather and find people from above.\n" +
+          "It will have a radar scanner for seeing through clouds and searching wide areas.\n" +
+          "It is powered by nuclear electricity: long clean flights without dirty fuel.\n" +
+          "It will have a charging nest for landing and recharging safely.\n" +
+          "It is powered by nuclear and solar: the nest stays ready day and night."
+      },
+      {
+        title: "Nuclear powered autonomous eco-storage hub",
+        img: "images/image1.png",
+        text:
+          "I want to build an eco-storage hub for city workers to store and find goods quickly.\n" +
+          "It will have sorting robots for putting boxes away by themselves.\n" +
+          "It is powered by nuclear and solar: clean power for the warehouse machines.\n" +
+          "It will have a smart shelf system for organising files and parcels.\n" +
+          "It is powered by nuclear electricity: steady power so robots keep working."
+      },
+      {
+        title: "Nuclear powered autonomous train",
+        img: "images/image8.png",
+        text:
+          "I want to build an autonomous train for families to travel quietly across the city.\n" +
+          "It will have a self-driving control room for safe travel without a diesel engine.\n" +
+          "It is powered by nuclear electricity: clean power instead of dirty smoke.\n" +
+          "It will have a passenger charging wall for phones during the ride.\n" +
+          "It is powered by nuclear electricity: spare clean power for useful extras."
+      },
+      {
+        title: "Nuclear powered autonomous train",
+        img: "images/image5.png",
+        text:
+          "I want to build an autonomous train for commuters to travel cleanly every day.\n" +
+          "It will have a different carriage design for more seats and easy access.\n" +
+          "It is powered by nuclear electricity: the same clean idea in a new shape.\n" +
+          "It will have a bike storage bay for riders who mix train and bike travel.\n" +
+          "It is powered by nuclear electricity: one clean source for the whole train."
+      },
+      {
+        title: "Nuclear powered water sports centre",
+        img: "images/image9.png",
+        text:
+          "I want to build a water sports centre for families to swim, play, and grow food together.\n" +
+          "It will have a warm swimming pool for all-weather water sports.\n" +
+          "It is powered by nuclear leftover heat: warm water without burning extra fuel.\n" +
+          "It will have a greenhouse for growing food for the canteen.\n" +
+          "It is powered by nuclear leftover heat and solar panels: heat for plants, sun for lights."
+      }
+    ];
+
+    let i = 0;
+    const dots = document.getElementById("dots");
+    const title = document.getElementById("title");
+    const explain = document.getElementById("explain");
+    const pic = document.getElementById("pic");
+
+    IDEAS.forEach((_, idx) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", "Idea " + (idx + 1));
+      b.addEventListener("click", () => show(idx));
+      dots.appendChild(b);
+    });
+
+    function show(n) {
+      i = n;
+      const idea = IDEAS[i];
+      title.textContent = idea.title;
+      explain.textContent = idea.text;
+      pic.src = idea.img;
+      pic.alt = idea.title;
+      [...dots.children].forEach((b, idx) => b.classList.toggle("on", idx === i));
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") show((i + 1) % IDEAS.length);
+      if (e.key === "ArrowLeft") show((i - 1 + IDEAS.length) % IDEAS.length);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poe chat</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --ink: #1c1916;
+      --muted: #6f675e;
+      --line: #ddd4c6;
+      --card: #fffdf9;
+      --accent: #1d6b45;
+      --accent-ink: #f4fff8;
+      --user: #1d6b45;
+      --danger: #8d2f1d;
+      --shadow: 0 10px 28px rgba(48, 36, 18, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.4 "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 12px 16px 14px;
+    }
+
+    .messages {
+      flex: 1;
+      overflow: auto;
+      padding: 8px 2px 10px;
+    }
+
+    .empty {
+      margin: 18vh 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .bubble {
+      margin: 0 0 10px;
+      display: grid;
+      gap: 2px;
+    }
+
+    .who, .meta {
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .text {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      font-size: 1rem;
+    }
+
+    .bubble.user .text {
+      background: var(--user);
+      color: var(--accent-ink);
+      border-color: transparent;
+    }
+
+    .bubble img {
+      max-width: min(100%, 420px);
+      border-radius: 10px;
+      margin-top: 6px;
+    }
+
+    .status:empty { display: none; }
+
+    .status {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin: 0 4px 6px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 6px 8px 4px;
+    }
+
+    .box:focus-within { border-color: #8fbfa4; }
+
+    textarea {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      resize: none;
+      min-height: 42px;
+      max-height: 140px;
+      padding: 6px 4px 2px;
+      font: inherit;
+      color: inherit;
+    }
+
+    textarea:focus { outline: none; }
+
+    .foot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+    }
+
+    .model-button {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 2px 0;
+    }
+
+    .model-button::after { content: " ▾"; }
+
+    .model-button:disabled::after { content: ""; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px;
+      background: rgba(28, 25, 22, 0.46);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal[hidden] { display: none; }
+
+    .modal-card {
+      width: min(420px, 100%);
+      max-height: min(520px, calc(100dvh - 56px));
+      display: flex;
+      flex-direction: column;
+      background: #fffcf8;
+      border-radius: 20px;
+      box-shadow: 0 28px 80px rgba(28, 25, 22, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 18px 6px;
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+      font-weight: 650;
+    }
+
+    .close-panel {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .close-panel:hover { background: #f3efe6; color: var(--ink); }
+
+    .filters {
+      display: grid;
+      gap: 8px;
+      padding: 4px 16px 12px;
+    }
+
+    .filters label {
+      display: grid;
+      gap: 4px;
+    }
+
+    .filters label[hidden] { display: none; }
+
+    .filters label span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .filters select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: 14px/1.2 "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    .list {
+      overflow: auto;
+      max-height: 240px;
+      padding: 4px 8px 10px;
+    }
+
+    .list button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .list button:hover { background: #f6f1e8; }
+
+    .list button[aria-selected="true"] {
+      background: #e8f5ee;
+      color: var(--accent);
+      font-weight: 650;
+    }
+
+    .list button[aria-selected="true"]::after {
+      content: "✓";
+    }
+
+    .empty-list {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 16px 12px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .modal-card { animation: rise 160ms ease; }
+    }
+
+    @keyframes rise {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+
+    button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 12px/1 "Avenir Next", "Segoe UI", sans-serif;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    #send {
+      margin-left: auto;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 650;
+    }
+
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="messages" id="messages">
+      <div class="empty" id="empty">Send a message.</div>
+    </div>
+    <div class="status" id="status" role="status"></div>
+    <form id="composer" class="box">
+      <textarea id="prompt" rows="2" placeholder="Message" disabled></textarea>
+      <div class="foot">
+        <button id="modelButton" class="model-button" type="button" aria-haspopup="dialog" aria-expanded="false" disabled>Loading…</button>
+        <button id="clearChat" type="button">New chat</button>
+        <button id="send" type="submit" disabled>Send</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="panel" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modelTitle">
+      <div class="modal-head">
+        <h2 id="modelTitle">Choose a model</h2>
+        <button id="closePanel" class="close-panel" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="filters">
+        <label><span>Type</span>
+          <select id="typeSelect"></select>
+        </label>
+        <label id="labField" hidden><span>Lab</span>
+          <select id="labSelect"></select>
+        </label>
+      </div>
+      <div class="list" id="modelList"></div>
+    </div>
+  </div>
+
+  <script>
+    const FEATURED = [
+      "claude-opus-4.8",
+      "claude-sonnet-5.5",
+      "claude-haiku-5.5",
+      "claude-opus-4.7",
+      "claude-sonnet-4.6",
+      "gpt-5.4",
+      "gpt-5.4-pro",
+      "gpt-5.4-mini",
+      "gpt-5.4-nano",
+      "gpt-5.3-codex",
+      "gemini-3.1-pro",
+      "gemini-3.8-flash",
+      "grok-4.7",
+      "grok-4.20-multi-agent",
+      "kimi-k3",
+      "deepseek-v4-pro",
+      "glm-5.2",
+      "mistral-large-4",
+      "minimax-m3"
+    ];
+
+    const API_KEY = "sk-poe-O5W3IK2FZgXLxwwAEE7GNphuIJY1AL_UkzhIW6wbnEg";
+
+    const TYPES = [
+      { id: "suggested", label: "Suggested" },
+      { id: "chat", label: "Chat" },
+      { id: "image", label: "Image" },
+      { id: "video", label: "Video" },
+      { id: "audio", label: "Audio" }
+    ];
+
+    const els = {
+      modelButton: document.querySelector("#modelButton"),
+      panel: document.querySelector("#panel"),
+      closePanel: document.querySelector("#closePanel"),
+      typeSelect: document.querySelector("#typeSelect"),
+      labField: document.querySelector("#labField"),
+      labSelect: document.querySelector("#labSelect"),
+      modelList: document.querySelector("#modelList"),
+      clearChat: document.querySelector("#clearChat"),
+      messages: document.querySelector("#messages"),
+      empty: document.querySelector("#empty"),
+      status: document.querySelector("#status"),
+      prompt: document.querySelector("#prompt"),
+      send: document.querySelector("#send"),
+      composer: document.querySelector("#composer")
+    };
+
+    const state = {
+      models: [],
+      messages: [],
+      controller: null,
+      busy: false,
+      selectedId: "",
+      tab: "suggested",
+      lab: "all"
+    };
+
+    localStorage.removeItem("poeChatKey");
+
+    els.modelButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (els.modelButton.disabled) return;
+      if (els.panel.hidden) openPanel();
+      else closePanel();
+    });
+    els.panel.addEventListener("click", (event) => {
+      if (event.target === els.panel) closePanel();
+    });
+    els.closePanel.addEventListener("click", (event) => {
+      event.stopPropagation();
+      closePanel();
+    });
+    els.typeSelect.addEventListener("change", () => {
+      state.tab = els.typeSelect.value;
+      if (state.tab !== "suggested") {
+        const names = labNames(state.tab);
+        if (!names.includes(state.lab)) state.lab = defaultLab(names);
+      }
+      paintPanel();
+    });
+    els.labSelect.addEventListener("change", () => {
+      state.lab = els.labSelect.value;
+      paintModels();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closePanel();
+    });
+    els.clearChat.addEventListener("click", () => {
+      if (state.controller) state.controller.abort();
+      state.messages = [];
+      els.messages.replaceChildren(els.empty);
+      els.empty.hidden = false;
+      els.status.textContent = "";
+      setBusy(false);
+    });
+    els.composer.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (state.busy) {
+        state.controller?.abort();
+        return;
+      }
+      send();
+    });
+    els.prompt.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        els.composer.requestSubmit();
+      }
+    });
+
+    connect();
+
+    function setReady(on) {
+      els.modelButton.disabled = !on;
+      els.prompt.disabled = !on;
+      els.send.disabled = !on || state.busy;
+    }
+
+    function setBusy(on) {
+      state.busy = on;
+      els.send.textContent = on ? "Stop" : "Send";
+      els.send.disabled = !on && els.prompt.disabled;
+    }
+
+    function setStatus(text) {
+      els.status.textContent = text || "";
+    }
+
+    function headers() {
+      return {
+        Authorization: "Bearer " + API_KEY,
+        "Content-Type": "application/json"
+      };
+    }
+
+    async function connect() {
+      setStatus("Loading models…");
+      try {
+        const modelsRes = await fetch("https://api.poe.com/v1/models", {
+          headers: { Authorization: "Bearer " + API_KEY }
+        });
+        if (!modelsRes.ok) throw new Error(await errorText(modelsRes));
+        const payload = await modelsRes.json();
+        state.models = Array.isArray(payload.data) ? payload.data : [];
+        renderModels();
+        setReady(true);
+        setStatus("");
+        els.prompt.focus();
+      } catch (error) {
+        setReady(false);
+        setStatus(networkHint(error));
+      }
+    }
+
+    function modelType(model) {
+      const out = model.architecture?.output_modalities || ["text"];
+      const has = (kind) => out.includes(kind);
+      if (has("video") && !has("text")) return "video";
+      if (has("audio") && !has("text")) return "audio";
+      if (has("image") && !has("text")) return "image";
+      return "chat";
+    }
+
+    function modelsForType(type) {
+      if (type === "suggested") {
+        const byId = new Map(state.models.map((model) => [model.id, model]));
+        return FEATURED.map((id) => byId.get(id)).filter(Boolean);
+      }
+      return state.models
+        .filter((model) => modelType(model) === type)
+        .sort((a, b) => a.id.localeCompare(b.id));
+    }
+
+    function labNames(type) {
+      const counts = new Map();
+      for (const model of modelsForType(type)) {
+        const owner = model.owned_by || "Other";
+        counts.set(owner, (counts.get(owner) || 0) + 1);
+      }
+      return [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a) || a.localeCompare(b));
+    }
+
+    function defaultLab(names) {
+      const preferred = ["OpenAI", "Anthropic", "Google", "XAI", "DeepSeek"];
+      return preferred.find((name) => names.includes(name)) || names[0] || "";
+    }
+
+    function fillSelect(select, options, value) {
+      select.replaceChildren();
+      for (const option of options) {
+        const item = document.createElement("option");
+        item.value = option.value;
+        item.textContent = option.label;
+        select.append(item);
+      }
+      if (options.some((option) => option.value === value)) select.value = value;
+    }
+
+    function renderModels() {
+      const remembered = localStorage.getItem("poeChatModel") || "gpt-5.4";
+      const match = state.models.find((model) => model.id === remembered);
+      state.selectedId = match ? match.id : (state.models[0]?.id || "");
+      els.modelButton.textContent = state.selectedId || "No models";
+    }
+
+    function openPanel() {
+      const selected = selectedModel();
+      if (!selected || FEATURED.includes(selected.id)) {
+        state.tab = "suggested";
+        state.lab = "";
+      } else {
+        state.tab = modelType(selected);
+        state.lab = selected.owned_by || "Other";
+      }
+      els.panel.hidden = false;
+      els.modelButton.setAttribute("aria-expanded", "true");
+      paintPanel();
+    }
+
+    function closePanel() {
+      els.panel.hidden = true;
+      els.modelButton.setAttribute("aria-expanded", "false");
+    }
+
+    function paintPanel() {
+      const types = TYPES.filter((type) => modelsForType(type.id).length);
+      fillSelect(
+        els.typeSelect,
+        types.map((type) => ({ value: type.id, label: type.label })),
+        state.tab
+      );
+      state.tab = els.typeSelect.value || "suggested";
+
+      const suggested = state.tab === "suggested";
+      els.labField.hidden = suggested;
+      if (!suggested) {
+        const names = labNames(state.tab);
+        if (!names.includes(state.lab)) state.lab = defaultLab(names);
+        fillSelect(
+          els.labSelect,
+          names.map((name) => ({ value: name, label: name })),
+          state.lab
+        );
+        state.lab = els.labSelect.value;
+      }
+      paintModels();
+    }
+
+    function paintModels() {
+      const models = state.tab === "suggested"
+        ? modelsForType("suggested")
+        : modelsForType(state.tab).filter((model) => (model.owned_by || "Other") === state.lab);
+      els.modelList.replaceChildren();
+      if (!models.length) {
+        const note = document.createElement("div");
+        note.className = "empty-list";
+        note.textContent = "No models in this list.";
+        els.modelList.append(note);
+        return;
+      }
+      for (const model of models) {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-selected", String(model.id === state.selectedId));
+        item.textContent = model.id;
+        item.addEventListener("click", (event) => {
+          event.stopPropagation();
+          chooseModel(model.id);
+        });
+        els.modelList.append(item);
+      }
+      const current = els.modelList.querySelector('[aria-selected="true"]');
+      if (current) current.scrollIntoView({ block: "nearest" });
+    }
+
+    function chooseModel(id) {
+      state.selectedId = id;
+      localStorage.setItem("poeChatModel", id);
+      els.modelButton.textContent = id;
+      closePanel();
+    }
+
+    function selectedModel() {
+      return state.models.find((model) => model.id === state.selectedId) || null;
+    }
+
+    function addBubble(role, text, who) {
+      els.empty.hidden = true;
+      const bubble = document.createElement("article");
+      bubble.className = "bubble " + role;
+      const name = document.createElement("div");
+      name.className = "who";
+      name.textContent = who;
+      const body = document.createElement("div");
+      body.className = "text";
+      body.textContent = text;
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      bubble.append(name, body, meta);
+      els.messages.append(bubble);
+      els.messages.scrollTop = els.messages.scrollHeight;
+      return { body, meta, bubble };
+    }
+
+    function showMedia(bubble, text) {
+      const match = text.match(/https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?/i);
+      if (!match) return;
+      const img = document.createElement("img");
+      img.src = match[0];
+      img.alt = "Model image";
+      bubble.append(img);
+    }
+
+    async function send() {
+      const content = els.prompt.value.trim();
+      const model = selectedModel();
+      if (!content || !model) return;
+      els.prompt.value = "";
+      state.messages.push({ role: "user", content });
+      addBubble("user", content, "You");
+      const view = addBubble("assistant", "…", model.id);
+      setBusy(true);
+      setStatus("");
+      state.controller = new AbortController();
+      const outs = model.architecture?.output_modalities || ["text"];
+      const stream = outs.includes("text");
+      try {
+        const response = await fetch("https://api.poe.com/v1/chat/completions", {
+          method: "POST",
+          headers: headers(),
+          signal: state.controller.signal,
+          body: JSON.stringify({
+            model: model.id,
+            messages: state.messages,
+            stream
+          })
+        });
+        if (!response.ok) throw new Error(await errorText(response));
+        let full = "";
+        if (!stream) {
+          const data = await response.json();
+          full = contentToText(data.choices?.[0]?.message?.content);
+          view.body.textContent = full || "(empty reply)";
+          if (data.usage?.total_tokens) view.meta.textContent = data.usage.total_tokens + " tokens";
+        } else {
+          full = await readStream(response, (chunk) => {
+            view.body.textContent = chunk;
+            els.messages.scrollTop = els.messages.scrollHeight;
+          }, (usage) => {
+            if (usage?.total_tokens) view.meta.textContent = usage.total_tokens + " tokens";
+          });
+          if (!full) view.body.textContent = "(empty reply)";
+        }
+        state.messages.push({ role: "assistant", content: full });
+        showMedia(view.bubble, full);
+      } catch (error) {
+        if (error.name === "AbortError") {
+          view.meta.textContent = "Stopped";
+          const partial = view.body.textContent === "…" ? "" : view.body.textContent;
+          if (partial) state.messages.push({ role: "assistant", content: partial });
+        } else {
+          view.body.textContent = "Request failed";
+          setStatus(networkHint(error));
+          state.messages.pop();
+        }
+      } finally {
+        state.controller = null;
+        setBusy(false);
+      }
+    }
+
+    async function readStream(response, onText, onUsage) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let full = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split(/\n\n/);
+        buffer = parts.pop() || "";
+        for (const part of parts) {
+          for (const line of part.split(/\n/)) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data:")) continue;
+            const data = trimmed.slice(5).trim();
+            if (!data || data === "[DONE]") continue;
+            const json = JSON.parse(data);
+            const delta = json.choices?.[0]?.delta?.content;
+            const piece = contentToText(delta);
+            if (piece) {
+              full += piece;
+              onText(full);
+            }
+            if (json.usage) onUsage(json.usage);
+          }
+        }
+      }
+      return full;
+    }
+
+    function contentToText(content) {
+      if (!content) return "";
+      if (typeof content === "string") return content;
+      if (Array.isArray(content)) {
+        return content.map((part) => part?.text || part?.content || "").join("");
+      }
+      return "";
+    }
+
+    async function errorText(response) {
+      const raw = await response.text();
+      try {
+        const json = JSON.parse(raw);
+        return json.error?.message || json.message || raw;
+      } catch {
+        return raw || ("HTTP " + response.status);
+      }
+    }
+
+    function networkHint(error) {
+      const message = error.message || "Request failed";
+      if (message === "Failed to fetch") {
+        return "The browser blocked the request. From the newapichat folder run: python3 -m http.server 8765";
+      }
+      return message;
+    }
+  </script>
+</body>
+</html>

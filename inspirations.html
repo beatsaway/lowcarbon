@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>100 Inspiration Ideas</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .sub {
+      margin: 0 0 16px;
+      color: #555;
+      font-size: 15px;
+    }
+    .sub a { color: #111; font-weight: 700; }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    button {
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 14px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    button:hover { background: #f5f5f5; }
+    button.main {
+      background: #111;
+      color: #fff;
+    }
+    button.main:hover { background: #333; }
+    .meta {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .one {
+      border: 2px solid #111;
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 180px;
+      margin-bottom: 20px;
+    }
+    .one-title {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .one-text {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .list-title {
+      margin: 24px 0 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    ol.ideas {
+      margin: 0;
+      padding-left: 1.4rem;
+    }
+    ol.ideas li {
+      margin: 0 0 14px;
+      font-size: 15px;
+      font-weight: 600;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    ol.ideas li strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="sub"><a href="index.html">← Home</a> · <a href="someexamples/index.html">Picture examples</a></p>
+    <h1>100 inspiration ideas</h1>
+    <p class="sub">Each idea is written like a design statement. Pick one at a time, or scroll the full list.</p>
+
+    <div class="toolbar">
+      <button type="button" id="prevBtn">Previous</button>
+      <button type="button" class="main" id="nextBtn">Next idea</button>
+      <button type="button" id="randBtn">Random</button>
+    </div>
+    <p class="meta">Browsing <span id="num">1</span> of 100</p>
+
+    <div class="one">
+      <h2 class="one-title" id="oneTitle"></h2>
+      <p class="one-text" id="oneText"></p>
+    </div>
+
+    <h2 class="list-title">Full list</h2>
+    <ol class="ideas" id="fullList"></ol>
+  </div>
+
+  <script>
+    const IDEAS = [
+      { t: "Clean-power school water fountain", d: "I want to build a school water fountain for students to drink without plastic bottles.\nIt will have a chilled drinking taps for fresh water at break time.\nIt is powered by nuclear electricity: clean power to chill the water." },
+      { t: "Waste-heat swimming pool", d: "I want to build a public swimming pool for families to swim in warm water all year.\nIt will have a warm pool for comfortable swimming.\nIt is powered by nuclear leftover heat: leftover heat keeps the water warm." },
+      { t: "Greenhouse next to clean power", d: "I want to build a greenhouse for gardeners to grow vegetables nearby.\nIt will have a growing beds for fresh food.\nIt is powered by nuclear leftover heat: warm air for plants without extra fuel." },
+      { t: "Solar + nuclear charging hub", d: "I want to build a street charging hub for cyclists to charge phones and e-bikes day and night.\nIt will have a phone and bike chargers for topping up devices.\nIt is powered by nuclear and solar: solar by day, nuclear at night." },
+      { t: "Clean-power cargo bike garage", d: "I want to build a cargo bike garage for delivery workers to deliver food with less smoke.\nIt will have a bike charging racks for ready cargo bikes.\nIt is powered by nuclear electricity: clean charging for neighbourhood deliveries." },
+      { t: "Desalination for island villages", d: "I want to build a desalination plant for island families to drink fresh water from the sea.\nIt will have a salt-to-fresh machine for making drinking water.\nIt is powered by nuclear electricity: strong clean power for the pumps." },
+      { t: "Coral nursery powered cleanly", d: "I want to build a coral nursery for ocean learners to help reefs grow stronger.\nIt will have a water pumps and lights for healthy coral tanks.\nIt is powered by nuclear electricity: clean power for the nursery systems." },
+      { t: "Seaweed snack farm", d: "I want to build a seaweed farm for coastal families to grow seaweed for food.\nIt will have a coastal water system for growing edible seaweed.\nIt is powered by nuclear electricity: clean pumps beside the coast." },
+      { t: "Hydrogen bus refill station", d: "I want to build a hydrogen bus station for city travellers to ride buses with no smoke.\nIt will have a hydrogen refill bay for refilling clean buses.\nIt is powered by nuclear electricity: used to make hydrogen cleanly." },
+      { t: "Clean-power hospital backup", d: "I want to build a hospital backup centre for patients to keep machines on during storms.\nIt will have a emergency power room for lights and medical machines.\nIt is powered by nuclear electricity: steady clean backup in typhoons." },
+      { t: "Cool lobby for elderly neighbours", d: "I want to build a cool lobby for elderly people to rest safely on hot days.\nIt will have a cool rest lounge for escaping heatwaves.\nIt is powered by nuclear electricity: clean fans and cooling." },
+      { t: "Smart fridge for a whole block", d: "I want to build a community fridge hub for estate residents to share food and cut waste.\nIt will have a shared fridge for storing leftovers safely.\nIt is powered by nuclear electricity: one clean fridge for many families." },
+      { t: "Robot library sorter", d: "I want to build a library sorting room for librarians to return books with less travel.\nIt will have a sorting robots for putting books back.\nIt is powered by nuclear electricity: clean power for robot helpers." },
+      { t: "Autonomous clean train", d: "I want to build a autonomous train for commuters to travel without diesel smoke.\nIt will have a self-driving carriages for quiet clean journeys.\nIt is powered by nuclear electricity: clean power instead of dirty fuel." },
+      { t: "Clean-power tram for the harbour", d: "I want to build a harbour tram for tourists to ride quietly along the waterfront.\nIt will have a passenger tram line for easy harbour travel.\nIt is powered by nuclear electricity: quiet clean electricity." },
+      { t: "Drone weather watcher", d: "I want to build a weather drone base for schools to get early typhoon warnings.\nIt will have a weather scanning drone for checking storm clouds.\nIt is powered by nuclear electricity: clean-powered flights for warnings." },
+      { t: "Drone that finds lost hikers", d: "I want to build a mountain rescue drone nest for rescue teams to find lost hikers faster.\nIt will have a radar drone for searching trails from above.\nIt is powered by nuclear and battery storage: charged at a clean-power nest." },
+      { t: "Parcel tower with robot lifts", d: "I want to build a parcel locker tower for shoppers to collect boxes without long car trips.\nIt will have a robot lifts for moving parcels up and down.\nIt is powered by nuclear electricity: clean power for the tower robots." },
+      { t: "Eco storage hub", d: "I want to build a eco storage hub for city workers to store goods with less carbon.\nIt will have a warehouse robots for organising goods.\nIt is powered by nuclear and solar: mixed clean power for the hub." },
+      { t: "Night-market battery cart", d: "I want to build a night-market battery cart for stall owners to sell food without diesel generators.\nIt will have a mobile battery for powering stalls quietly.\nIt is powered by nuclear electricity: battery charged with clean power." },
+      { t: "Clean-power laundry shop", d: "I want to build a neighbourhood laundry for families to wash clothes with less carbon.\nIt will have a hot water washers for cleaning clothes.\nIt is powered by nuclear leftover heat: reused heat for washing water." },
+      { t: "School uniform dryer room", d: "I want to build a school dryer room for students to dry uniforms in rainy weeks.\nIt will have a warm drying racks for drying wet uniforms.\nIt is powered by nuclear leftover heat: reused heat instead of extra fuel." },
+      { t: "Vertical farm in the city", d: "I want to build a vertical farm for city families to grow lettuce near home.\nIt will have a shelf growing lights for indoor vegetables.\nIt is powered by nuclear electricity: clean lights instead of long truck trips." },
+      { t: "Fish farm with clean pumps", d: "I want to build a fish farm for fish farmers to keep fish healthy.\nIt will have a water pumps and filters for clean fish tanks.\nIt is powered by nuclear electricity: clean-powered water systems." },
+      { t: "Ice rink with clean chillers", d: "I want to build a ice rink for skaters to skate without dirty fuel.\nIt will have a ice chillers for making skating ice.\nIt is powered by nuclear electricity: clean electricity for cold ice." },
+      { t: "Water sports centre", d: "I want to build a water sports centre for families to swim, stay cool, and grow food.\nIt will have a warm pool for all-weather swimming.\nIt is powered by nuclear leftover heat: warm water from leftover heat.\nIt will have a greenhouse for growing food for the canteen.\nIt is powered by nuclear leftover heat and solar: heat for plants, sun for lights." },
+      { t: "Smart umbrella shade stop", d: "I want to build a bus shade stop for waiting passengers to stay cool before the bus comes.\nIt will have a cooling umbrella for shade and soft cool air.\nIt is powered by nuclear electricity: clean power for the cool fans." },
+      { t: "Clean-power playground lights", d: "I want to build a playground lighting for children to play safely after dark.\nIt will have a path lights for night-time play paths.\nIt is powered by nuclear and solar: day charge plus clean night power." },
+      { t: "Swing that stores energy", d: "I want to build a play-powered park for children to play and help light the path.\nIt will have a energy swings for charging path LEDs.\nIt is powered by kinetic play power and nuclear: play energy topped up with clean power." },
+      { t: "Clean-power climbing wall fans", d: "I want to build a climbing centre for climbers to train without huge air-con.\nIt will have a soft cooling fans for staying cool while climbing.\nIt is powered by nuclear electricity: gentle clean cooling." },
+      { t: "Museum with clean climate control", d: "I want to build a museum for visitors to protect old art carefully.\nIt will have a climate control room for steady temperature for art.\nIt is powered by nuclear electricity: clean steady power." },
+      { t: "Cinema with smart cool air", d: "I want to build a cinema for film fans to watch films with less wasted cooling.\nIt will have a seat cooling pads for cooling only occupied seats.\nIt is powered by nuclear electricity: smart clean cooling." },
+      { t: "Clean-power ferry charger", d: "I want to build a ferry charging pier for harbour travellers to ride electric ferries.\nIt will have a ferry charging bay for charging clean boats.\nIt is powered by nuclear electricity: harbour clean power." },
+      { t: "Autonomous harbour boat", d: "I want to build a harbour clean-up boat for harbour workers to collect floating rubbish.\nIt will have a rubbish collection boat for cleaning the water.\nIt is powered by nuclear electricity: clean-powered autonomous boat." },
+      { t: "Plastic-to-brick workshop", d: "I want to build a plastic brick workshop for eco club kids to turn bottles into garden bricks.\nIt will have a bottle press machine for making recycled bricks.\nIt is powered by nuclear electricity: clean power for the press." },
+      { t: "Fix-it workshop for toys", d: "I want to build a toy repair workshop for families to fix toys instead of dumping them.\nIt will have a repair tool benches for mending broken toys.\nIt is powered by nuclear electricity: clean-powered repair tools." },
+      { t: "Crayon remelt station", d: "I want to build a art remelt station for art students to remake old crayons.\nIt will have a crayon melting pot for making new rainbow crayons.\nIt is powered by nuclear leftover heat: clean heat for remelting." },
+      { t: "Clean-power 3D print lab", d: "I want to build a 3D print lab for inventors to print invention models.\nIt will have a 3D printers for making prototypes.\nIt is powered by nuclear electricity: clean classroom printing." },
+      { t: "Robot classroom cleaner", d: "I want to build a school cleaning robot bay for cleaners to clean classrooms after school.\nIt will have a floor cleaning robot for night-time cleaning.\nIt is powered by nuclear electricity: clean night power schedule." },
+      { t: "Smart corridor lights", d: "I want to build a school corridor lighting for students to walk in bright halls without waste.\nIt will have a daylight sensors for dimming lights in sunshine.\nIt is powered by nuclear electricity: only the clean power needed." },
+      { t: "Lift grouping helper", d: "I want to build a smart lift lobby for tower residents to share lift trips and save power.\nIt will have a lift grouping screen for collecting nearby floors.\nIt is powered by nuclear electricity: fewer wasted lift journeys." },
+      { t: "E-bike school bus", d: "I want to build a e-bike school trailer for primary students to travel to school with clean power.\nIt will have a group bike trailer for shared school trips.\nIt is powered by nuclear electricity: clean charging for the trailer." },
+      { t: "Book cargo bike", d: "I want to build a book cargo bike hub for librarians to move books without cars.\nIt will have a cargo bike for carrying library books.\nIt is powered by nuclear electricity: clean charging between campuses." },
+      { t: "Clean-power cooking classroom", d: "I want to build a food tech classroom for students to cook lessons with clean power.\nIt will have a induction cookers for classroom cooking.\nIt is powered by nuclear electricity: clean cookers instead of gas smoke." },
+      { t: "Community bread oven", d: "I want to build a community bakery for neighbours to bake shared bread.\nIt will have a shared bread oven for baking together.\nIt is powered by nuclear leftover heat: partly heated by leftover clean heat." },
+      { t: "Hot water from waste heat", d: "I want to build a hot water pipe network for families to take showers with less fuel.\nIt will have a waste-heat pipes for sending warm water to homes.\nIt is powered by nuclear leftover heat: leftover power-plant heat for showers." },
+      { t: "Snow machine for winter fun", d: "I want to build a winter fun park for families to enjoy a short clean snow day.\nIt will have a clean snow machine for making event snow.\nIt is powered by nuclear electricity: clean coolers instead of trucked ice." },
+      { t: "Indoor farm for herbs", d: "I want to build a herb indoor farm for restaurant cooks to grow mint and basil nearby.\nIt will have a herb growing shelves for fresh cooking herbs.\nIt is powered by nuclear electricity: clean-powered grow lights." },
+      { t: "Clean-power music stage", d: "I want to build a outdoor music stage for musicians to perform concerts with clean power.\nIt will have a battery stage pack for running speakers and lights.\nIt is powered by nuclear electricity: batteries charged cleanly." },
+      { t: "Silent night delivery robots", d: "I want to build a medicine delivery depot for patients to receive medicine quietly at night.\nIt will have a ground delivery robots for night medicine runs.\nIt is powered by nuclear electricity: silent clean robot power." },
+      { t: "Clean-power data classroom", d: "I want to build a school server room for ICT students to run class computers with less waste.\nIt will have a efficient cooling for keeping servers from overheating.\nIt is powered by nuclear electricity: careful clean cooling." },
+      { t: "Warm-air sports kit dryer", d: "I want to build a PE kit drying room for sports students to dry wet kits after games.\nIt will have a warm-air dryer for drying PE kits.\nIt is powered by computer waste heat and nuclear: reuse warm air from computers." },
+      { t: "Rain-to-garden system", d: "I want to build a rain garden system for gardeners to water plants with saved rain.\nIt will have a rain barrels and pumps for sending rain to plants.\nIt is powered by nuclear electricity: clean pumps for rainwater." },
+      { t: "Fog catcher for dry days", d: "I want to build a fog water collector for village families to collect water on dry days.\nIt will have a fog nets and pumps for gathering drinking water.\nIt is powered by nuclear electricity: clean pumps for collected fog water." },
+      { t: "Clean-power water slide park", d: "I want to build a water slide park for families to play on slides with recycled water.\nIt will have a slide pumps for moving pool water.\nIt is powered by nuclear electricity: clean pumps and recycled water." },
+      { t: "Shark-safe beach radar buoy", d: "I want to build a beach safety buoy for swimmers to get warnings before swimming.\nIt will have a radar buoy for sensing ocean danger.\nIt is powered by nuclear and solar: clean-powered beach sensors." },
+      { t: "Turtle nesting light shield", d: "I want to build a beach light shield for wildlife carers to protect turtle nests at night.\nIt will have a dim smart lights for safer nesting beaches.\nIt is powered by nuclear electricity: lights stay dim for turtles." },
+      { t: "Clean-power butterfly house", d: "I want to build a butterfly house for nature learners to watch butterflies in steady air.\nIt will have a climate greenhouse for comfortable butterfly habitat.\nIt is powered by nuclear electricity: clean climate control." },
+      { t: "Bee hotel with sensor", d: "I want to build a bee hotel garden for gardeners to help bees stay healthy.\nIt will have a temperature sensor for checking bee hotel conditions.\nIt is powered by nuclear electricity: tiny clean-powered sensor." },
+      { t: "City tree water drip network", d: "I want to build a tree drip network for city workers to water roadside trees slowly.\nIt will have a drip water lines for keeping trees alive.\nIt is powered by nuclear electricity: clean-powered drip pumps." },
+      { t: "Green roof pump helper", d: "I want to build a green roof garden for rooftop gardeners to water plants with rainwater.\nIt will have a roof garden pumps for moving rain to plants.\nIt is powered by nuclear electricity: small clean pumps." },
+      { t: "Clean-power laundry bots", d: "I want to build a hotel laundry room for hotel workers to fold clothes faster with less carbon.\nIt will have a folding robot arms for hotel laundry work.\nIt is powered by nuclear electricity: clean robot power." },
+      { t: "Hotel towel reuse lights", d: "I want to build a hotel guest room for hotel guests to reuse towels and save water heating.\nIt will have a reminder lights for encouraging towel reuse.\nIt is powered by nuclear electricity: tiny clean reminder lights." },
+      { t: "Stadium seat cool pads", d: "I want to build a sports stadium for sports fans to stay cool without freezing the whole stadium.\nIt will have a seat cool pads for personal cooling.\nIt is powered by nuclear electricity: less energy than whole-stadium air-con." },
+      { t: "Clean-power scoreboard", d: "I want to build a sports ground for athletes to see scores without wasted power.\nIt will have a smart scoreboard for showing match scores.\nIt is powered by nuclear electricity: sleeps when unused." },
+      { t: "Training drone for STEM club", d: "I want to build a STEM drone nest for STEM club kids to practise flying safely.\nIt will have a training drone for learning flight skills.\nIt is powered by nuclear electricity: charged at a clean nest." },
+      { t: "Space-inspired sun tracker", d: "I want to build a school solar garden for science students to collect more sunlight for class power.\nIt will have a sun-tracking panels for following the sun like a satellite.\nIt is powered by solar and nuclear: more solar harvest, nuclear backup." },
+      { t: "Mars greenhouse practice box", d: "I want to build a sealed plant practice box for space club kids to practise growing food with clean power.\nIt will have a sealed grow box for future food growing.\nIt is powered by nuclear electricity: steady clean grow lights." },
+      { t: "Clean-power planetarium", d: "I want to build a planetarium for families to watch star shows with less carbon.\nIt will have a efficient projectors for star shows.\nIt is powered by nuclear electricity: clean show power." },
+      { t: "Science bus that charges overnight", d: "I want to build a mobile science bus for school trip groups to bring science lessons to schools.\nIt will have a mobile lab bus for classroom experiments on wheels.\nIt is powered by nuclear electricity: overnight clean charging." },
+      { t: "Floating solar + nuclear mix hub", d: "I want to build a harbour energy hub for harbour workers to power harbour tools cleanly.\nIt will have a floating solar array for daytime harbour power.\nIt is powered by nuclear and solar: mixed clean harbour electricity." },
+      { t: "Emergency clean-power backpack", d: "I want to build a family emergency kit store for families to stay ready for typhoons.\nIt will have a portable battery backpack for emergency phone and light power.\nIt is powered by nuclear electricity: charged before storms." },
+      { t: "Shelter fan wall", d: "I want to build a typhoon shelter for storm refugees to stay cooler without loud generators.\nIt will have a fan wall for cooling the shelter.\nIt is powered by nuclear electricity: quiet clean fans." },
+      { t: "Clean-power phone repair cart", d: "I want to build a phone repair cart for residents to fix phones instead of buying new ones.\nIt will have a repair tools for phone fixing.\nIt is powered by nuclear electricity: clean-powered repair cart." },
+      { t: "Battery swap for scooters", d: "I want to build a scooter battery swap hub for scooter riders to swap batteries quickly.\nIt will have a battery swap boxes for fresh scooter power.\nIt is powered by nuclear electricity: swap boxes charged cleanly." },
+      { t: "Quiet clean street sweeper", d: "I want to build a estate path sweeper for estate workers to clean paths quietly.\nIt will have a electric sweeper for cleaning estate paths.\nIt is powered by nuclear electricity: quiet clean sweeping." },
+      { t: "Robot recycling sorter", d: "I want to build a recycling sort hall for recycling helpers to sort waste accurately.\nIt will have a camera sorting robots for separating plastic, paper, and metal.\nIt is powered by nuclear electricity: clean sorting machines." },
+      { t: "Glass bottle wash line", d: "I want to build a bottle reuse wash line for cafe workers to wash and reuse bottles.\nIt will have a hot water wash line for cleaning glass bottles.\nIt is powered by nuclear leftover heat: clean hot water for washing." },
+      { t: "Clean-power pottery kiln schedule", d: "I want to build a art kiln room for art students to fire pottery with planned clean power.\nIt will have a pottery kiln for firing clay work.\nIt is powered by nuclear electricity: night firing when power is planned." },
+      { t: "Shared tool library", d: "I want to build a tool library for neighbours to borrow tools instead of buying more.\nIt will have a tool lending desk for sharing drills and saws.\nIt is powered by nuclear electricity: clean charging for shared tools." },
+      { t: "Community fridge map app", d: "I want to build a community fridge network for neighbours to share leftover food.\nIt will have a mapped fridges for finding food to share.\nIt is powered by nuclear electricity: fridges kept cold with clean power." },
+      { t: "School lunch heat boxes", d: "I want to build a school canteen for students to keep lunch warm with less waste.\nIt will have a warm lunch boxes for heating shared lunches.\nIt is powered by nuclear electricity: fewer home microwave trips." },
+      { t: "Clean-power milk cooler", d: "I want to build a shop milk cooler for shoppers to keep milk fresh with less waste.\nIt will have a better-lid milk cooler for cold dairy storage.\nIt is powered by nuclear electricity: clean shop cooling." },
+      { t: "Ice-cream cart with clean battery", d: "I want to build a park ice-cream cart for park visitors to buy ice cream without petrol generators.\nIt will have a battery cold box for keeping ice cream cold.\nIt is powered by nuclear electricity: clean battery instead of petrol." },
+      { t: "Clean-power fountain show", d: "I want to build a fountain plaza for families to enjoy water shows with less waste.\nIt will have a timed fountain pumps for lights and water jets.\nIt is powered by nuclear electricity: timed clean-power plan." },
+      { t: "Bridge wind + clean power lights", d: "I want to build a bridge lighting for night travellers to cross safely after dark.\nIt will have a bridge lights for safe night crossing.\nIt is powered by wind and nuclear: wind helpers plus clean electricity." },
+      { t: "Tunnel air cleaner fans", d: "I want to build a road tunnel for drivers to breathe cleaner tunnel air.\nIt will have a air cleaner fans for moving fresher air.\nIt is powered by nuclear electricity: clean-powered tunnel fans." },
+      { t: "Clean-power cable car", d: "I want to build a hillside cable car for tourists to ride up hills without dirty fuel.\nIt will have a cable car line for hillside travel.\nIt is powered by nuclear electricity: clean hillside transport." },
+      { t: "Mountain rescue charge posts", d: "I want to build a mountain trail charge posts for rescue teams to keep radios and drones ready.\nIt will have a trail charging posts for charging rescue gear.\nIt is powered by nuclear electricity: clean power on the trail." },
+      { t: "Camp stove induction picnic", d: "I want to build a picnic induction spot for campers to cook outdoors without charcoal smoke.\nIt will have a induction picnic pads for clean outdoor cooking.\nIt is powered by nuclear electricity: induction instead of charcoal." },
+      { t: "Clean-power aquarium", d: "I want to build a aquarium for visitors to watch fish with clean systems.\nIt will have a tank chillers and pumps for healthy fish habitats.\nIt is powered by nuclear electricity: clean aquarium machines." },
+      { t: "Jellyfish early-warning buoy", d: "I want to build a beach warning buoy for swimmers to know when jellyfish arrive.\nIt will have a jellyfish sensor buoy for beach warnings.\nIt is powered by nuclear and solar: clean-powered ocean sensors." },
+      { t: "Clean-power film studio", d: "I want to build a school film studio for drama students to make films with efficient lights.\nIt will have a LED film lights for classroom film making.\nIt is powered by nuclear electricity: efficient clean lighting." },
+      { t: "Podcast booth in the library", d: "I want to build a library podcast booth for students to record climate stories.\nIt will have a quiet recording booth for student podcasts.\nIt is powered by nuclear electricity: clean-powered mics." },
+      { t: "VR field trip without planes", d: "I want to build a VR classroom for classes to visit far places without flying.\nIt will have a VR headsets for virtual field trips.\nIt is powered by nuclear electricity: clean charging instead of plane trips." },
+      { t: "Clean-power chess clocks wall", d: "I want to build a chess club wall for club players to play with devices that sleep after use.\nIt will have a shared charging strip for club clocks and screens.\nIt is powered by nuclear electricity: one clean strip, then sleep." },
+      { t: "Robot gardener", d: "I want to build a robot garden for gardeners to water only dry plants.\nIt will have a garden watering robot for careful watering.\nIt is powered by nuclear electricity: clean robot gardening." },
+      { t: "Seed library fridge", d: "I want to build a seed library for growers to keep seeds ready to share.\nIt will have a cool seed drawer for storing seeds steadily.\nIt is powered by nuclear electricity: steady clean cooling." },
+      { t: "Clean-power kite festival lights", d: "I want to build a kite festival field for families to enjoy evening kite shows.\nIt will have a battery kite lights for night festival lights.\nIt is powered by nuclear electricity: lights charged cleanly." },
+      { t: "Harbour hydrogen yacht demo", d: "I want to build a harbour hydrogen yacht for visitors to see clean boat fuel in action.\nIt will have a hydrogen demo boat for clean harbour sailing.\nIt is powered by nuclear electricity: hydrogen made with clean nuclear power." }
+    ];
+
+    let i = 0;
+    const oneTitle = document.getElementById("oneTitle");
+    const oneText = document.getElementById("oneText");
+    const num = document.getElementById("num");
+    const fullList = document.getElementById("fullList");
+
+    IDEAS.forEach((idea) => {
+      const li = document.createElement("li");
+      const strong = document.createElement("strong");
+      strong.textContent = idea.t;
+      const body = document.createElement("div");
+      body.textContent = idea.d;
+      li.append(strong, body);
+      fullList.appendChild(li);
+    });
+
+    function show(n) {
+      i = (n + IDEAS.length) % IDEAS.length;
+      oneTitle.textContent = (i + 1) + ". " + IDEAS[i].t;
+      oneText.textContent = IDEAS[i].d;
+      num.textContent = String(i + 1);
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", () => show(i - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => show(i + 1));
+    document.getElementById("randBtn").addEventListener("click", () => {
+      let n;
+      do { n = Math.floor(Math.random() * IDEAS.length); } while (n === i && IDEAS.length > 1);
+      show(n);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>
