@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Example form packs</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .sub {
+      margin: 0 0 16px;
+      color: #555;
+      font-size: 15px;
+    }
+    .sub a { color: #111; font-weight: 700; }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .filters select, .toolbar button {
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .toolbar button.main {
+      background: #111;
+      color: #fff;
+    }
+    .toolbar button.main:hover,
+    .toolbar button:hover { background: #f5f5f5; }
+    .toolbar button.main:hover { background: #333; }
+    .meta {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .one {
+      border: 2px solid #111;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .one-title {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+    .tag {
+      border: 2px solid #111;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #f7f7f7;
+    }
+    .section {
+      margin: 0 0 12px;
+    }
+    .section h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .section p {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 650;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    .count {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #666;
+      font-weight: 700;
+    }
+    .count.ok { color: #1b6b2d; }
+    .count.bad { color: #8d2f1d; }
+    .list-title {
+      margin: 24px 0 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    ol.ideas {
+      margin: 0;
+      padding-left: 1.4rem;
+    }
+    ol.ideas li {
+      margin: 0 0 18px;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    ol.ideas li strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+    .mini {
+      color: #444;
+      font-weight: 600;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="sub"><a href="index.html">← Home</a> · <a href="brainstorm.html">Form brainstorm</a></p>
+    <h1>Example form packs</h1>
+    <p class="sub">Each pack gives theme, beneficiary, and ready Chinese + English inspiration drafts you can adapt.</p>
+
+    <div class="filters">
+      <select id="themeFilter" aria-label="Filter by theme">
+        <option value="">All themes</option>
+      </select>
+      <select id="whoFilter" aria-label="Filter by beneficiary">
+        <option value="">All beneficiaries</option>
+      </select>
+    </div>
+
+    <div class="toolbar">
+      <button type="button" id="prevBtn">Previous</button>
+      <button type="button" class="main" id="nextBtn">Next pack</button>
+      <button type="button" id="randBtn">Random</button>
+    </div>
+    <p class="meta">Browsing <span id="num">1</span> of <span id="total">0</span></p>
+
+    <div class="one">
+      <h2 class="one-title" id="oneTitle"></h2>
+      <div class="tags" id="oneTags"></div>
+      <div class="section">
+        <h3>Invention idea</h3>
+        <p id="oneIdea"></p>
+      </div>
+      <div class="section">
+        <h3>Source of Inspiration — English</h3>
+        <p id="oneEn"></p>
+        <p class="count" id="oneEnCount"></p>
+      </div>
+      <div class="section">
+        <h3>靈感來源 — 中文</h3>
+        <p id="oneZh"></p>
+        <p class="count" id="oneZhCount"></p>
+      </div>
+    </div>
+
+    <h2 class="list-title">Full list</h2>
+    <ol class="ideas" id="fullList"></ol>
+  </div>
+
+  <script>
+    const IDEAS = [
+      {
+        t: "Focus lamp for homework",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "A desk lamp with a visible focus timer so students study in short blocks and put the phone aside.",
+        en: "The idea started when classmates said phones steal their homework time after dinner. I also kept hearing debates about screen time during form periods and STEM club chats. I want a focus lamp for teenagers so they can finish homework with fewer distractions. That push made me choose a simple light-and-timer design instead of a complicated phone app full of menus.",
+        zh: "靈感來自學校觀察：同學放學後常說手機令功課拖到很夜才開始。同時也受到校園「螢幕時間」討論影響。我想在教育方向，為青少年發明帶計時提示的檯燈，幫助他們分段專注完成功課。這個靈感讓我決定把操作做得極簡單，用燈光與倒數提醒代替複雜應用程式，真正貼近溫習需要。"
+      },
+      {
+        t: "Bilingual homework helper",
+        theme: "Education",
+        who: "Children",
+        idea: "A tablet helper that explains homework steps in Chinese and English with voice support.",
+        en: "The idea came from helping a younger neighbour who mixed up English and Chinese homework instructions. Family conversations about language support at home also pushed me forward. I want a bilingual helper for children so they can understand lessons in two languages. This made me design big buttons, spoken guidance, and short steps before any advanced features.",
+        zh: "靈感來自幫助鄰居弟妹做功課：他常把中英文指示混在一起，越做越心急。同時也受到家庭雙語學習討論影響。我想在教育方向，為兒童發明雙語步驟提示工具，幫助他們更清楚理解習作要求。這個靈感讓我決定同時支援中英文，並用大按鈕與語音引導，減少挫敗感與放棄。"
+      },
+      {
+        t: "Classroom air alert board",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "A wall board that shows CO2 and opens a window reminder when the room gets stuffy.",
+        en: "I noticed our classroom felt sleepy after lunch even when lessons were interesting and teachers tried hard. A science article about indoor air quality sparked the link for me. I want an air alert board for students so they can know when classroom air is unhealthy. That inspiration made me focus on clear colours and one action: open the windows together.",
+        zh: "靈感來自課堂觀察：午飯後課室明明有趣，大家仍容易昏沉想睡。後來讀到室內空氣質素文章，才把兩者連起來。我想為學生發明課室空氣提示板，在二氧化碳偏高時提醒開窗換氣。這個靈感讓我決定用清楚顏色與單一行動提示，而不是堆砌難懂數據，方便老師同學即時改善。"
+      },
+      {
+        t: "Lost-and-found QR locker",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "School lockers tagged with QR codes so lost items return to owners faster.",
+        en: "The idea began from long queues at our lost-and-found desk every Friday afternoon. A conversation with prefects about wasted lesson time also shaped the plan. I want QR lockers for students so they can find lost items without long searches. This pushed me to keep scanning simple and carefully protect personal details from public display.",
+        zh: "靈感來自學校失物處逢星期五大排長龍，大家浪費很多時間。與領袖生談及影響上課後，想法更清晰。我想為學生發明QR失物櫃，加快物歸原主。這個靈感讓我決定把掃描流程做得很簡單，並注意保護私隱，避免公開太多個人資料，使設計既方便又安全可信。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Medicine reminder box",
+        theme: "Medical and healthcare",
+        who: "The elderly",
+        idea: "A light-up pill box that alerts morning and night doses with a family phone message.",
+        en: "My idea began from a personal experience: my grandfather mixed morning and night pills on a busy day. Talks about Hong Kong’s ageing population and home care also influenced me. I want a reminder box for the elderly so they can take the right medicine on time. This made me keep buttons large and alerts loud but calm for family support.",
+        zh: "靈感來自個人經歷：爺爺忙碌時把早晚藥物弄亂，家人都很擔心。同時也受香港人口老化與家居照顧討論影響。我想在醫療健康方向，為長者發明發光藥盒，幫助準時服用正確藥物。這個靈感讓我決定用大按鈕與清楚聲光提示，把安全放在花巧功能之前，方便家人共同使用。"
+      },
+      {
+        t: "Hydration bottle for patients",
+        theme: "Medical and healthcare",
+        who: "Chronic patients",
+        idea: "A smart bottle that glows when patients forget to drink during recovery.",
+        en: "The idea came from a clinic visit where a nurse reminded a patient to drink water more often during recovery. Stories about chronic care at home also shaped my thinking. I want a glow bottle for chronic patients so they can drink enough water each day. That led me to use gentle lights instead of noisy alarms that increase stress.",
+        zh: "靈感來自診所探訪：護士提醒病人復原期間要定時喝水，但人常會忘記。同時也受到長期病患居家照顧議題影響。我想為長期病患者發明發光提示水樽，幫助補充足夠水分。這個靈感讓我決定用溫和燈光代替嘈吵鬧鐘，減少壓力，讓提示容易融入日常作息與治療計劃。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Hospital wayfinding bracelet",
+        theme: "Medical and healthcare",
+        who: "Family",
+        idea: "A wristband that vibrates with simple directions inside large hospitals.",
+        en: "The idea started when my family got lost between wards during a hospital visit and felt more anxious. Crowded hospital wayfinding problems kept appearing in news and forums. I want a bracelet for families so they can find clinics without getting lost. This inspiration made me choose vibration cues, big-text maps, and fewer confusing arrows.",
+        zh: "靈感來自家人探病時在病房之間迷路，氣氛更緊張。網上關於大醫院尋路困難的討論也影響我。我想為家庭發明振動導航手帶，幫助更快找到診室與檢查室。這個靈感讓我決定用震動提示和大字地圖，減少閱讀壓力，讓設計在緊張情況下仍然容易明白使用。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Posture coach wearable",
+        theme: "Medical and healthcare",
+        who: "Teenagers/student",
+        idea: "A soft back sensor that buzzes when students slouch during long study sessions.",
+        en: "I noticed my shoulders ached after long revision weeks and friends had the same quiet complaint. Health posts about teen posture problems influenced me a lot. I want a posture coach for students so they can sit more comfortably during long study. That pushed me to make the wearable soft, light, private, and easy to ignore in class.",
+        zh: "靈感來自溫習週後肩頸疼痛，同學也有同樣情況卻很少說出口。青少年姿勢問題的健康分享影響了我。我想為學生發明溫柔的姿勢提示穿戴裝置，在長時間坐姿中提點挺直。這個靈感讓我決定做輕、柔軟且不公開尷尬提醒，把健康放在炫耀功能之前。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Smart bus-stop crowd display",
+        theme: "Smart city",
+        who: "General public",
+        idea: "A stop screen that shows how crowded nearby waiting spots are in real time.",
+        en: "The idea began from a family conversation: Mum queued at a packed stop while the next one looked empty. Smart transport apps and open city data inspired the approach. I want a crowd display for the public so they can choose a less crowded bus stop. This made me design offline-friendly icons people can read in one glance.",
+        zh: "靈感來自與家人對話：媽媽在擠塞站頭排隊，鄰近一站卻較空。智慧交通應用與城市開放數據啟發了做法。我想為市民發明巴士站人流顯示，幫助選擇較少擠迫的候車點。這個靈感讓我決定用離線也可看懂的圖示，令資訊在網絡不穩時仍然有用，減少無效等候。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Flood-warning street kit",
+        theme: "Smart city",
+        who: "General public",
+        idea: "Low-cost street sensors that warn estates before heavy rain floods paths.",
+        en: "I first thought of this after reading news about sudden street flooding near schools and shops. Climate risk and city safety issues kept appearing around me. I want a flood-warning kit for the public so they can get early alerts before heavy rain. That inspiration made me focus on cheap sensors, clear sirens, and simple estate placement.",
+        zh: "靈感來自新聞：學校附近街道突然水浸，學生難以上課回家。氣候風險與城市安全議題反覆出現在身邊。我想為市民發明低成本水浸預警街感測套件，在暴雨前發出清楚警告。這個靈感讓我決定先顧安全、用平價零件，並以簡單警報為核心，而不是追求複雜儀表。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Quiet night parcel locker",
+        theme: "Smart city",
+        who: "Family",
+        idea: "Estate lockers that receive night deliveries without doorbell noise.",
+        en: "The idea came from neighbours complaining about late-night delivery doorbells waking young children. Estate living pressures and smart logistics trends also influenced me. I want a quiet locker for families so they can collect parcels without waking the household. This pushed me to remove needless alerts and keep access codes private and short.",
+        zh: "靈感來自鄰居抱怨深夜送貨門鈴吵醒孩子，整層樓都不安寧。同時也受屋苑生活與智慧物流趨勢影響。我想為家庭發明靜音夜間包裹櫃，減少打擾。這個靈感讓我決定去掉不必要的響鬧，並保護取件密碼私隱，讓城市便利與鄰居安寧可以同時做到。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Shared tool library app",
+        theme: "Smart city",
+        who: "Particular occupation",
+        idea: "A booking app for building workers and DIY helpers to share rarely used tools.",
+        en: "A conversation with a handyman uncle sparked it: he buys tools he only needs once or twice. Sharing-economy ideas in cities influenced the design strongly. I want a tool library app for workers so they can borrow tools instead of buying more. That made me prioritise trust ratings, deposits, and simple neighbourhood pickup points.",
+        zh: "靈感來自與做維修的叔叔對話：他常買只用一次的工具，又佔地方。城市共享經濟概念影響了設計。我想為特定職業人士發明工具圖書館預約應用，減少重複購買與浪費。這個靈感讓我決定加入信任評分與簡單取還點，讓分享實用可靠，而不是只做漂亮介面。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Fridge camera against waste",
+        theme: "Smart living",
+        who: "Family",
+        idea: "A fridge camera that lists soon-to-expire food and suggests one leftover meal.",
+        en: "The idea started when our family threw away vegetables forgotten at the back of the fridge again. Food-waste campaigns and green living trends shaped my direction. I want a fridge helper for families so they can use leftovers before they spoil. This inspiration made me aim for less waste and one useful meal tip, not more gadgets.",
+        zh: "靈感來自家中又一次把雪櫃深處忘了的蔬菜丟掉，大家覺得很可惜。惜食運動與綠色生活潮流影響了我。我想為家庭發明雪櫃相機助手，提醒快到期食物並建議一道剩菜餐。這個靈感讓我決定以減少浪費為核心，避免功能過多，讓家人願意每天真正打開使用。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Sleep-friendly light schedule",
+        theme: "Smart living",
+        who: "Teenagers/student",
+        idea: "Bedroom lights that slowly warm down before bedtime to protect sleep.",
+        en: "I noticed I slept worse after late bright screen study sessions before tests. Sleep-health articles and peer conversations influenced my thinking. I want a light schedule for students so they can sleep better with calmer night lighting. That pushed me to automate a gentle fade instead of relying only on tired willpower.",
+        zh: "靈感來自測驗前深夜強光溫習後睡眠變差，第二天更難集中。睡眠健康文章與同學討論影響了我。我想為學生發明睡前暖光漸暗排程，幫助更容易入睡。這個靈感讓我決定用自動柔和轉暗代替只靠自制力，把設計重點放在真實作息，而不是花巧燈光表演。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Voice-guided cooking assistant",
+        theme: "Smart living",
+        who: "The elderly",
+        idea: "A kitchen speaker that reads recipes step by step with burn-safety checks.",
+        en: "Helping my grandma cook while she struggled to read tiny recipe text sparked this project. Inclusive home-tech trends also influenced what I valued. I want a voice cooking guide for the elderly so they can cook safely with spoken steps. This made me put burn-safety prompts before fancy recipe collections or social features.",
+        zh: "靈感來自協助婆婆煮菜：她看不清食譜小字，又擔心爐火。共融家居科技趨勢也影響我。我想為長者發明語音煮食助理，逐步讀出步驟並加入防燙提示。這個靈感讓我決定把安全提示放在花巧食譜功能之前，讓科技真正幫到手，而不是增加廚房混亂。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Umbrella share stand",
+        theme: "Smart living",
+        who: "General public",
+        idea: "Station stands that lend umbrellas on sudden rainy days and take them back nearby.",
+        en: "The idea came from getting soaked outside the MTR when rain started in only a few minutes. Shared-mobility trends in the city inspired the format. I want an umbrella stand for the public so they can borrow one on sudden rainy days. That led me to design quick QR borrow steps and nearby return points people can trust.",
+        zh: "靈感來自港鐵口突然落雨被淋濕，附近卻買不到傘。城市共享出行潮流啟發了形式。我想為市民發明雨傘共享站，讓人在驟雨時快速借用並在附近歸還。這個靈感讓我決定用簡單QR借用與鄰近還點，減少麻煩，使便利服務真正跟得上香港善變天氣。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Rainwater balcony garden",
+        theme: "Sustainability",
+        who: "Family",
+        idea: "A balcony kit that stores rain and drips it to pots during dry days.",
+        en: "I first thought of this after watching balcony plants die during a dry spell while earlier rain had been wasted. Water-saving campaigns influenced me strongly. I want a rain garden kit for families so they can water plants with saved rain. This made me choose cheap pipes, clear overflow safety, and instructions for small flats.",
+        zh: "靈感來自家中陽台植物乾死，而早前天雨卻白白流走，覺得很矛盾。節約用水宣傳影響了我。我想為家庭發明陽台雨水滴灌套件，把雨水留給植物。這個靈感讓我決定用平價喉管並清楚處理溢流安全，讓可持續設計容易在普通細單位安裝與維護。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Plastic-bottle brick press",
+        theme: "Sustainability",
+        who: "Children",
+        idea: "A club press that turns washed bottles into interlocking garden bricks.",
+        en: "Our eco club collected bottles but had no next step after the recycling bin filled up. Upcycling makers and school green weeks inspired a hands-on answer. I want a bottle brick press for children so they can turn bottles into useful garden bricks. That push made me design for school materials, low cost, and adult supervision.",
+        zh: "靈感來自環保學會收集膠瓶後不知下一步，回收桶滿了就停住。升級再造創客與學校綠色週啟發了我。我想為兒童發明膠瓶磚壓製器，把瓶子變成花園磚。這個靈感讓我決定用學校常見物料低成本製作，並加入老師監護流程，讓動手做既有趣又安全。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Colour recycling sorting game",
+        theme: "Sustainability",
+        who: "Children",
+        idea: "A playful bin set that teaches plastic, paper, and food waste through lights.",
+        en: "The idea started when younger students put snack bags into the paper bin during green week. Waste-sorting education campaigns influenced how I framed the lesson. I want a sorting game for children so they can learn recycling rules through play. This made me use colours and sounds instead of long posters full of text rules.",
+        zh: "靈感來自綠週時低年級同學把零食袋丟進廢紙筒，糾正很費時。分類回收教育活動影響了我。我想為兒童發明顏色分類遊戲桶，用玩樂學會回收規則。這個靈感讓我決定用顏色與聲音代替長篇文字，讓學習即時、有趣，也更容易記住正確做法並養成習慣。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Community fridge map",
+        theme: "Sustainability",
+        who: "General public",
+        idea: "An app map of shared fridges so leftovers are eaten instead of dumped.",
+        en: "I read about food being thrown away while nearby families still needed affordable meals. Community fridge projects around the world inspired a clearer local loop. I want a fridge map for the public so they can share leftover food safely. That inspiration made me emphasise hygiene rules, food labels, and clear pickup times.",
+        zh: "靈感來自得知食物被丟掉，附近卻有家庭需要膳食，落差很大。世界各地社區雪櫃計劃啟發了我。我想為市民發明共享雪櫃地圖，促進安全分享剩食。這個靈感讓我決定突出衛生規則、食物標示與清楚領取時間，讓善意分享可被信任，而不變成混亂。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Low-vision reading stand",
+        theme: "Creative solutions",
+        who: "People with disability",
+        idea: "A camera stand that enlarges printed text onto a high-contrast screen.",
+        en: "Helping a neighbour read tiny medicine label print sparked this idea immediately. Accessible design and inclusive technology strongly influenced my priorities. I want a reading stand for people with disability so they can read printed text more easily at home. This made me choose big text, high contrast, and a one-button enlarge control.",
+        zh: "靈感來自幫助鄰居讀藥物標籤小字，他覺得每次都麻煩別人。無障礙設計與共融科技深深影響我。我想為殘疾人士發明放大閱讀支架，把印刷文字清楚顯示在高對比螢幕。這個靈感讓我決定使用大字、高對比與一鍵放大，把真正可讀性放在複雜功能之前。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Kerbsensing cane tip",
+        theme: "Creative solutions",
+        who: "People with disability",
+        idea: "A cane tip that gently vibrates before kerbs and steps.",
+        en: "The idea came from watching a visually impaired passenger hesitate at uneven kerbs near our estate entrance. Inclusive mobility discussions influenced what I wanted to fix. I want a sensing cane tip for people with disability so they can walk outdoors with more confidence. That push made safety signals quiet, fast, reliable, and easy to recharge.",
+        zh: "靈感來自看見視障鄰居在凹凸路邊猶豫不前，節奏被打斷。共融出行討論影響了我。我想為殘疾人士發明路緣感應拐杖頭，在梯級前輕震提醒。這個靈感讓我決定把安全訊號做得安靜、快速、可靠，並容易充電，讓外出信心提升，而不是增加額外負擔。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "One-button help pendant",
+        theme: "Creative solutions",
+        who: "The elderly",
+        idea: "A necklace button that calls two family contacts and shares live location.",
+        en: "A news story about elderly people unable to call for help after a fall first sparked this. Family worries about ageing alone also shaped the requirements. I want a help pendant for the elderly so they can call assistance with one press. This made me reject tiny menus and keep one solid waterproof button only.",
+        zh: "靈感來自新聞：有長者跌倒後未能求助，家人很自責。對獨居安老的擔憂也影響我。我想為長者發明一鍵求助吊墜，按下即可聯絡家人並分享位置。這個靈感讓我決定去掉細小選單，只留一顆可靠防水大按鈕，讓緊急時刻真正用得上，不靠複雜設定。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Tinnitus masking earbuds",
+        theme: "Creative solutions",
+        who: "Chronic patients",
+        idea: "Soft earbuds that play gentle masking sounds timed for night rest.",
+        en: "A relative described how ear ringing made nights exhausting, and that conversation stayed with me. Patient-centred health design influenced my approach. I want masking earbuds for chronic patients so they can calm ringing at night and rest better. This inspiration made comfort, volume limits, and soft tips more important than stylish looks.",
+        zh: "靈感來自親戚描述耳鳴令夜晚難熬、白天更疲倦的對話。以病人為本的健康設計影響了我。我想為長期病患者發明遮蓋耳塞，在夜間播放柔和聲音幫助休息。這個靈感讓我決定把佩戴舒適與音量上限放在外形之前，讓睡眠質素成為真正目標，而不是潮流配件。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Delivery heat-safety vest",
+        theme: "Smart living",
+        who: "Particular occupation",
+        idea: "A vest that tracks heat strain and reminds riders to rest and drink water.",
+        en: "Summer news about outdoor delivery workers in extreme heat sparked this project. Worker safety reports kept reinforcing why timing matters. I want a heat-safety vest for delivery workers so they can stay safer in hot weather. That made me put rest reminders and hydration alerts before any fancy performance tracking screens.",
+        zh: "靈感來自夏季戶外送貨工在酷熱中工作的新聞，令人擔心中暑。職業安全報道不斷加強這需要。我想為特定職業人士發明熱壓力提示背心，提醒休息與補水。這個靈感讓我決定把安全提示放在花巧追蹤功能之前，讓科技真正保護在街上奔波送件的人。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Chef burn-alert kitchen pad",
+        theme: "Smart living",
+        who: "Particular occupation",
+        idea: "A stove-side pad that warns when oil smoke or pan heat becomes dangerous.",
+        en: "A restaurant kitchen visit showed how fast oil smoke can turn risky during rush hour service. Occupational safety talks influenced my checklist. I want a burn-alert pad for chefs so they can notice dangerous smoke or heat early. This pushed me toward loud clear warnings, heat-proof materials, and wipe-clean surfaces.",
+        zh: "靈感來參觀餐廳廚房：繁忙時油煙轉危險可以很快，人手卻不夠分神。職業安全討論影響了我。我想為廚師發明爐邊警示墊，提早發現危險煙熱。這個靈感讓我決定用清楚響亮警告、耐熱物料與易清潔表面，讓提示在高壓廚房裡仍然可靠好用。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Student check-in kiosk",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "A private hallway kiosk for quick mood check-ins that alerts counsellors only when needed.",
+        en: "The idea began from a class discussion about students hiding stress until exams finally break them. Mental-health awareness activities at school influenced me. I want a check-in kiosk for teenagers so they can ask for support without feeling embarrassed. This made privacy, optional sharing, and calm wording the centre of the design.",
+        zh: "靈感來自課堂討論：有學生把壓力藏到考試才突然爆發。校園精神健康關注活動影響了我。我想為青少年發明私密心情簽到機，在需要時才通知輔導老師。這個靈感讓我決定以私隱、自願分享與溫和用詞為核心，讓求助少一點尷尬、多一點安全感與選擇。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Park exercise coach for seniors",
+        theme: "Medical and healthcare",
+        who: "The elderly",
+        idea: "Outdoor posts that show slow exercise demos with large diagrams and rest timers.",
+        en: "I noticed elderly neighbours unsure which park equipment was safe for their knees and balance. Active-ageing programmes influenced my thinking about outdoor health. I want a park coach for the elderly so they can exercise outdoors with clear guidance. That inspiration made diagrams huge and steps slow, numbered, and easy to pause.",
+        zh: "靈感來自看見長者在公園器材前猶豫，不知是否適合自己的膝蓋。活躍樂齡計劃影響了我。我想為長者發明公園運動指導柱，用大圖與休息計時示範動作。這個靈感讓我決定圖解要大、步驟要慢且可暫停，讓户外運動更有信心，減少受傷擔心。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Falls-alert floor mat",
+        theme: "Medical and healthcare",
+        who: "Chronic patients",
+        idea: "A bedside mat that messages family if a heavy fall impact is detected.",
+        en: "A nurse explained how long a fall at home can go unnoticed, and that detail stayed with me. Ageing-in-place care ideas influenced the whole project. I want a falls mat for chronic patients so family can be alerted after a fall quickly. This made me prioritise reliable alerts and battery warnings over extra app decoration.",
+        zh: "靈感來自護士說明家中跌倒可能很久才被發現，後果可以很嚴重。居家安老照顧概念影響了計劃。我想為長期病患者發明跌倒警示地墊，第一時間通知家人。這個靈感讓我決定把可靠警報與電量提示放在額外裝飾功能之前，讓照顧網絡更快接上。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Quiet study pod for libraries",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "A small library pod with noise meter lights that help students keep a quiet zone.",
+        en: "The idea came from exam season when group tables became too loud for focused revision work. School library overcrowding is a problem I kept noticing every year. I want a study pod for students so they can finish homework with fewer distractions. That led to soft walls and simple red-amber-green noise lights anyone can understand.",
+        zh: "靈感來自考試季圖書館大桌太嘈，難以專心溫習，大家互相影響。校園圖書館擠迫問題我每年都見到。我想為學生發明安靜溫習艙，用噪音燈維持寧靜區。這個靈感讓我決定用軟牆與紅黃綠提示燈，把環境管理做得一眼就懂，減少爭執與投訴。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Allergy-safe lunch scanner",
+        theme: "Medical and healthcare",
+        who: "Children",
+        idea: "A canteen scanner that flags common allergens on lunch trays for kids.",
+        en: "A parent conversation about hidden lunch allergens at school first sparked this concern. Child food-safety stories in the news also influenced me deeply. I want a lunch scanner for children so families can reduce allergy risks at school. This made accuracy and simple warning icons the first design rule before any menu suggestions.",
+        zh: "靈感來自家長談及校園午餐隱藏致敏原，孩子自己未必說得出。兒童食物安全新聞也影響我。我想為兒童發明午餐過敏提示掃描，降低校園風險。這個靈感讓我決定把準確度與簡單警告圖示放在第一位，讓孩子和值班老師都能立刻看懂並採取行動。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Estate heat refuge map",
+        theme: "Smart city",
+        who: "The elderly",
+        idea: "A lobby screen showing the nearest cool rest spots during heatwaves.",
+        en: "I saw elderly neighbours resting in hot ground-floor lobbies with little airflow during heatwaves. Extreme-heat city planning stories influenced what I wanted to build. I want a heat refuge map for the elderly so they can rest safely on hot days. That inspiration made walking-distance info, opening hours, and water points essential.",
+        zh: "靈感來自看見長者在悶熱大堂休息，空氣卻不足，熱浪更危險。極端炎熱下的城市規劃報道影響了我。我想為長者發明社區清涼點地圖，顯示步行可到的休息處。這個靈感讓我決定必顯示路程、開放時間與飲水點，讓資訊在熱浪中真正幫到人。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Microgreen window farm",
+        theme: "Sustainability",
+        who: "Family",
+        idea: "A window rack that grows salad greens with leftover cooking water reminders.",
+        en: "The idea began after buying packaged greens that spoiled in two days and felt wasteful. Local food and low-waste living trends inspired a home-scale answer. I want a window farm for families so they can grow fresh leaves near home. This made me design for small flats, low cost, and very little daily effort.",
+        zh: "靈感來自買回的盒裝蔬菜兩天就壞，既浪費金錢又製造垃圾。本地食物與減廢生活趨勢啟發了我。我想為家庭發明窗台微菜農場，在家種植新鮮菜葉。這個靈感讓我決定迎合細單位、低成本與低維護，讓可持續生活容易每天堅持，而不是三日熱度。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Battery swap for e-scooters",
+        theme: "Smart city",
+        who: "Particular occupation",
+        idea: "Swap cabinets where couriers exchange empty batteries for charged ones in one minute.",
+        en: "Talking with a courier who lost delivery time hunting chargers sparked this solution. Clean last-mile transport trends influenced the system design. I want battery swap hubs for riders so they can keep working without long waits. That push made speed, safety locks, fire precautions, and clear instructions central to the build.",
+        zh: "靈感來自與速遞員對話：他為找充電器浪費送件時間，收入也受影響。清潔最後一里運輸趨勢影響了方案。我想為從業員發明電池互換櫃，一分鐘換走空電。這個靈感讓我決定把速度、安全鎖、防火措施與清楚指示放在核心，讓工具跟得上街頭節奏。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Sign-language learning mirror",
+        theme: "Education",
+        who: "People with disability",
+        idea: "A mirror app that checks hand shapes while students practise basic sign phrases.",
+        en: "A workshop where hearing students struggled to practise signs alone first sparked this tool. Inclusive education goals influenced me strongly after that day. I want a learning mirror for students and people with disability so they can practise signs with feedback. This made respectful guidance, clear visuals, and slow replay the priority.",
+        zh: "靈感來自工作坊：健聽同學獨自練習手語時缺少回饋，進步很慢。共融教育目標深深影響我。我想為學生及殘疾人士發明手語練習鏡，即時提示手形與節奏。這個靈感讓我決定以尊重引導、清楚視覺與慢鏡重播為先，讓練習有自信、不尷尬，也能持續。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Toy repair cart",
+        theme: "Creative solutions",
+        who: "Children",
+        idea: "A mobile cart with tools and guides so kids fix toys instead of dumping them.",
+        en: "The idea came from seeing broken toys thrown out after one loose screw at a building lobby. Repair culture and anti-waste makers inspired a kinder next step. I want a repair cart for children so families can fix toys instead of dumping them. That made me write picture guides and choose safe tool sizes for young hands.",
+        zh: "靈感來自看見大廈大堂有人把玩具丟掉，其實只是一顆螺絲鬆了。維修文化與減廢創客啟發了我。我想為兒童發明玩具維修車，讓家庭先修再丟。這個靈感讓我決定做圖解說明與適合小手的安全工具，讓修理變成可完成的小冒險，也學會珍惜物件。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Night-light route for estates",
+        theme: "Smart city",
+        who: "Family",
+        idea: "Path lights that brighten only when people walk home late from tutoring.",
+        en: "Walking home from tutoring blocks felt dark between buildings, and parents worried every week. Smart lighting energy-saving projects influenced how I balanced safety and power use. I want responsive path lights for families so children can walk safer after dark. This made motion sensing and energy saving work together in one route plan.",
+        zh: "靈感來自補習後回家路段偏暗，家長每週都擔心安全。智慧照明節能項目影響了我如何平衡用電。我想為家庭發明感應亮燈路徑，夜晚行人經過才加強照明。這個靈感讓我決定讓安全與節能一起做到，避免整晚長明造成浪費，也減少光害投訴。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Salt-reduction cooking lid",
+        theme: "Medical and healthcare",
+        who: "Chronic patients",
+        idea: "A smart measuring lid that warns when soup salt is likely too high.",
+        en: "A relative with high blood pressure asked how to season food with less salt, and that stuck. Public health campaigns on sodium influenced my design goals. I want a cooking lid for chronic patients so families can prepare safer everyday meals. This made clear warnings and simple spoons more important than recipe entertainment videos.",
+        zh: "靈感來自血壓偏高的親戚問如何少鹽調味，又不想飯菜淡而無味。公共衛生減鈉宣傳影響了我。我想為長期病患者發明智能量鹽鍋蓋，煮湯時提出清楚提醒。這個靈感讓我決定把健康警示與簡單量匙放在娛樂食譜之前，讓家常菜也可以更安心入口。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Campus plant water share",
+        theme: "Sustainability",
+        who: "Teenagers/student",
+        idea: "A student roster app that assigns plant watering so classroom greens survive holidays.",
+        en: "Classroom plants kept dying after long holidays because nobody owned the watering schedule. School green campus drives influenced me to fix the habit gap. I want a watering roster for students so plants survive with shared responsibility. That inspiration made reminders friendly, duties easy to swap, and progress visible to the class.",
+        zh: "靈感來自長假期後退室植物常枯死，因為沒人真正負責澆水。校園綠化推動影響了我。我想為學生發明澆水輪值應用，用共享責任保住綠意。這個靈感讓我決定把提醒做得友善，職務容易對調，並讓進度全班可見，令可持續習慣真能維持，而不是口號。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Market stall cool crate",
+        theme: "Smart living",
+        who: "Particular occupation",
+        idea: "A battery cool crate for wet-market sellers to keep fish and greens fresher.",
+        en: "Early market visits showed ice melting fast and food quality dropping by late morning heat. Small-business sustainability stories influenced the practical target. I want a cool crate for market sellers so they can keep stock fresh with less waste. This made battery time, easy cleaning, and tough handles the main engineering goals.",
+        zh: "靈感來自早市看見冰塊融得很快，近午貨品品質下降，浪費也增多。小商戶可持續經營故事影響了我。我想為檔主發明電池冷藏箱，延長新鮮並減少丟棄。這個靈感讓我決定把電池續航、易清潔與堅固提手放在首位，讓工具跟得上濕貨街市的真實節奏。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Colour-safe pill separator",
+        theme: "Creative solutions",
+        who: "The elderly",
+        idea: "A tray that sorts pills by colour and day with raised edges for shaky hands.",
+        en: "Watching an elderly neighbour struggle with flat weekly pill cards sparked this simple redesign. Home-care product thinking influenced every edge and colour choice. I want a colour-safe separator for the elderly so they can prepare medicine with fewer mistakes. That made raised edges, tactile marks, and high contrast essential from day one.",
+        zh: "靈感來自看見長者使用平舖藥卡時容易弄亂，手震更難抓穩。居家照顧產品思維影響了每條邊緣。我想為長者發明顏色分藥盤，按日與顏色整理藥物。這個靈感讓我決定加高邊緣、觸感標記與高對比，方便手震時仍能穩妥分藥，減少錯服風險。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Bus step height warning",
+        theme: "Smart city",
+        who: "People with disability",
+        idea: "A door light that warns when the boarding step is higher than usual.",
+        en: "I saw a wheelchair user and an elderly passenger hesitate at uneven bus entry heights after rain. Accessible transport advocacy influenced what I treated as urgent. I want a step warning for people with disability so boarding feels safer and more predictable. This made bright door cues and driver alerts part of one connected system.",
+        zh: "靈感來自看見輪椅使用者與長者在巴士門檻高度不一時猶豫，雨天更危險。無障礙交通倡議影響了我的優先次序。我想為殘疾人士發明上車門檻警示燈，提升安全感。這個靈感讓我決定把車門光號與司機提示做成同一系統，讓上落車更可預期，減少意外。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Exam stress breath booth",
+        theme: "Education",
+        who: "Teenagers/student",
+        idea: "A one-person booth with guided breathing lights outside exam halls.",
+        en: "Friends shaking before exams made me look for a calm tool that does not force talking. Youth mental-health support trends influenced the gentle tone I wanted. I want a breath booth for students so they can settle nerves privately before papers. That push made the sequence visual, short, quiet, and completely judgement-free.",
+        zh: "靈感來自朋友考試前雙手發抖，需要一個不用開口的冷靜工具。青少年精神健康支援趨勢影響了我。我想為學生發明呼吸引導小亭，讓人私下穩定情緒才進場。這個靈感讓我決定流程要短、全靠視覺、環境安靜且沒有批判，讓求助門檻降到最低也能保護尊嚴。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Family chore balance board",
+        theme: "Smart living",
+        who: "Family",
+        idea: "A wall board that fairly rotates chores and celebrates finished tasks with lights.",
+        en: "Arguments about who always washes dishes sparked this at home more than once. Fair-share family routines I saw online influenced the rotation logic. I want a chore board for families so housework feels clearer and fairer each week. This made automatic rotation and visible praise central, not just another cold duty checklist.",
+        zh: "靈感來自家中反覆爭論總是誰洗碗、誰倒垃圾。網上公平分擔家務的做法影響了設計。我想為家庭發明家務輪值燈板，讓分工更清楚公平。這個靈感讓我決定自動輪更，並用燈光肯定完成，而不只是冷冰冰的工作清單，讓合作比較容易持續。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Beach plastic weigh station",
+        theme: "Sustainability",
+        who: "General public",
+        idea: "A weekend station that weighs collected beach plastic and shows the group impact.",
+        en: "After a beach clean I wondered where the bags went and whether our effort really mattered. Public ocean-plastic campaigns inspired a clearer feedback loop for volunteers. I want a weigh station for the public so clean-up groups can see impact together. That made instant totals, sorting guides, and photo records the core features.",
+        zh: "靈感來自淨灘後想知道膠袋去了哪、努力有沒有被看見。海洋塑膠公眾行動啟發我做更清楚的回饋。我想為市民發明海灘塑膠稱重站，讓團隊看見成果。這個靈感讓我決定即時總量、分類指引與簡單紀錄是核心，把行動連到可見改變，鼓勵更多人再來。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Quiet library robot return",
+        theme: "Education",
+        who: "Particular occupation",
+        idea: "A small robot that returns books to shelves for librarians after closing.",
+        en: "Talking with a librarian about late-night shelf work sparked the idea for quieter help. Education staffing pressure and service robots influenced the direction. I want a return robot for librarians so books go back with less overtime strain. This made quiet wheels, careful shelf mapping, and obstacle stops the first requirements.",
+        zh: "靈感來自與圖書館員談及夜間上架辛勞，加班很常見。教育人力壓力與服務機械人趨勢影響了我。我想為館員發明靜音還書機械人，減少加班負擔。這個靈感讓我決定先做好靜音輪、準確書架地圖與避障停止，讓工具真正減壓而不是在閉館後添亂。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Diabetes snack timing watch",
+        theme: "Medical and healthcare",
+        who: "Chronic patients",
+        idea: "A watch that reminds snack timing around medicine and activity changes.",
+        en: "A family member with diabetes described how timing snacks is harder on busy school days. Chronic-care self-management tools influenced the features I kept. I want a timing watch for chronic patients so routines stay steadier through the week. That inspiration made reminders adjustable, discreet in class, and linked to medicine times.",
+        zh: "靈感來自家中糖尿病親友說忙碌上課日很難準時吃小食，也容易漏記藥物。慢性病自我管理工具影響了我。我想為長期病患者發明零食與藥物時機手錶，讓作息更穩。這個靈感讓我決定提醒可調校、在課堂低調，並連結用藥時間，減少尷尬與遺漏。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+      {
+        t: "Playground inclusive swing seat",
+        theme: "Creative solutions",
+        who: "Children",
+        idea: "A wider swing seat with side supports so children with weaker balance can join.",
+        en: "I watched a child wait out of games because the swing seat felt too narrow and tippy. Inclusive playground design stories influenced what fairness should look like. I want a supportive swing for children so more friends can play together safely. This made stability and dignity more important than looking special or medical.",
+        zh: "靈感來自看見孩子因盪千秋太窄不穩而只能旁觀，笑容消失。共融遊樂場設計故事影響了我對公平的想法。我想為兒童發明加側承托的寬座千秋，讓更多朋友一齊玩。這個靈感讓我決定把穩定與尊嚴放在「看起來特別」之前，讓玩樂真正開放給不同身體條件的孩子。我也希望這個設計能在學校展覽中清楚說明問題與解決方法。"
+      },
+    ];
+
+    function wordCount(text) {
+      const parts = text.trim().match(/[A-Za-z0-9'’-]+/g);
+      return parts ? parts.length : 0;
+    }
+    function zhCount(text) {
+      return [...text.replace(/\s+/g, "")].length;
+    }
+
+    const themeFilter = document.getElementById("themeFilter");
+    const whoFilter = document.getElementById("whoFilter");
+    [...new Set(IDEAS.map((x) => x.theme))].sort().forEach((t) => {
+      const o = document.createElement("option");
+      o.value = t; o.textContent = t; themeFilter.append(o);
+    });
+    [...new Set(IDEAS.map((x) => x.who))].sort().forEach((t) => {
+      const o = document.createElement("option");
+      o.value = t; o.textContent = t; whoFilter.append(o);
+    });
+
+    let filtered = IDEAS.slice();
+    let i = 0;
+
+    const oneTitle = document.getElementById("oneTitle");
+    const oneTags = document.getElementById("oneTags");
+    const oneIdea = document.getElementById("oneIdea");
+    const oneEn = document.getElementById("oneEn");
+    const oneZh = document.getElementById("oneZh");
+    const oneEnCount = document.getElementById("oneEnCount");
+    const oneZhCount = document.getElementById("oneZhCount");
+    const num = document.getElementById("num");
+    const total = document.getElementById("total");
+    const fullList = document.getElementById("fullList");
+
+    function applyFilter() {
+      const th = themeFilter.value;
+      const wh = whoFilter.value;
+      filtered = IDEAS.filter((x) => (!th || x.theme === th) && (!wh || x.who === wh));
+      rebuildList();
+      show(0);
+    }
+
+    function rebuildList() {
+      fullList.replaceChildren();
+      filtered.forEach((idea) => {
+        const li = document.createElement("li");
+        const strong = document.createElement("strong");
+        strong.textContent = idea.t + " · " + idea.theme + " · " + idea.who;
+        const body = document.createElement("div");
+        body.className = "mini";
+        body.textContent = idea.idea + "\n\nEN: " + idea.en + "\n\n中: " + idea.zh;
+        li.append(strong, body);
+        fullList.appendChild(li);
+      });
+      total.textContent = String(filtered.length);
+    }
+
+    function show(n) {
+      if (!filtered.length) {
+        oneTitle.textContent = "No packs match these filters";
+        oneTags.replaceChildren();
+        oneIdea.textContent = "";
+        oneEn.textContent = "";
+        oneZh.textContent = "";
+        oneEnCount.textContent = "";
+        oneZhCount.textContent = "";
+        num.textContent = "0";
+        return;
+      }
+      i = ((n % filtered.length) + filtered.length) % filtered.length;
+      const idea = filtered[i];
+      oneTitle.textContent = (i + 1) + ". " + idea.t;
+      oneTags.replaceChildren();
+      [["Theme", idea.theme], ["Beneficiary", idea.who]].forEach(([k, v]) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = k + ": " + v;
+        oneTags.append(span);
+      });
+      oneIdea.textContent = idea.idea;
+      oneEn.textContent = idea.en;
+      oneZh.textContent = idea.zh;
+      const ew = wordCount(idea.en);
+      const zc = zhCount(idea.zh);
+      oneEnCount.textContent = ew + " words (target 50–70)";
+      oneEnCount.className = "count " + (ew >= 50 && ew <= 70 ? "ok" : "bad");
+      oneZhCount.textContent = zc + " 字 (target 120–150)";
+      oneZhCount.className = "count " + (zc >= 120 && zc <= 150 ? "ok" : "bad");
+      num.textContent = String(i + 1);
+    }
+
+    themeFilter.addEventListener("change", applyFilter);
+    whoFilter.addEventListener("change", applyFilter);
+    document.getElementById("prevBtn").addEventListener("click", () => show(i - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => show(i + 1));
+    document.getElementById("randBtn").addEventListener("click", () => {
+      if (!filtered.length) return;
+      let n;
+      do { n = Math.floor(Math.random() * filtered.length); } while (n === i && filtered.length > 1);
+      show(n);
+    });
+
+    rebuildList();
+    show(0);
+  </script>
+</body>
+</html>

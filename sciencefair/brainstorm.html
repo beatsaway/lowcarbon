@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Form brainstorm</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.4;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 18px 80px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      font-weight: 800;
+    }
+    .sub {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #555;
+    }
+    .sub a { color: #111; font-weight: 700; }
+    .hint {
+      margin: 0 0 28px;
+      font-size: 15px;
+      color: #666;
+      font-weight: 600;
+    }
+    .statement {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.55;
+    }
+    .statement .row {
+      margin: 0 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 6px;
+    }
+    .blank {
+      position: relative;
+      display: inline-block;
+      vertical-align: baseline;
+      min-width: 160px;
+    }
+    .blank.wide { min-width: 220px; }
+    .blank.xwide { min-width: 300px; }
+    .blank.free { min-width: 280px; }
+    .blank input, .blank textarea {
+      width: 100%;
+      border: none;
+      border-bottom: 3px solid #111;
+      background: #f7f7f7;
+      font: inherit;
+      font-size: 22px;
+      font-weight: 700;
+      padding: 4px 8px;
+      color: #111;
+      border-radius: 4px 4px 0 0;
+    }
+    .blank textarea {
+      min-height: 72px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+    .blank input:focus, .blank textarea:focus {
+      outline: none;
+      background: #eee;
+    }
+    .suggest {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 2px);
+      z-index: 20;
+      max-height: 280px;
+      overflow: auto;
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 10px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      min-width: 260px;
+    }
+    .suggest.open { display: block; }
+    .suggest button {
+      display: block;
+      width: 100%;
+      border: none;
+      background: #fff;
+      text-align: left;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: #111;
+    }
+    .suggest button:hover,
+    .suggest button.active {
+      background: #111;
+      color: #fff;
+    }
+    .suggest .empty {
+      padding: 12px;
+      color: #666;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .block-label {
+      margin: 28px 0 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .actions button {
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 12px;
+    }
+    .actions button:hover { background: #f3f3f3; }
+    .actions .main {
+      background: #111;
+      color: #fff;
+    }
+    .actions .main:hover { background: #333; }
+    .preview-grid {
+      margin-top: 28px;
+      display: grid;
+      gap: 16px;
+    }
+    .card {
+      border: 2px solid #111;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .meta {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #666;
+      font-weight: 700;
+    }
+    .meta.ok { color: #1b6b2d; }
+    .meta.bad { color: #8d2f1d; }
+    .out {
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .quick {
+      margin-top: 20px;
+      border-top: 2px solid #eee;
+      padding-top: 18px;
+    }
+    .quick h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chips button {
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .chips button:hover { background: #f3f3f3; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="sub"><a href="index.html">← Home</a> · <a href="inspirations.html">Example packs</a></p>
+    <h1>Form brainstorm</h1>
+    <p class="sub">Fill in the blanks. Click a blank to pick from the list, or type your own.</p>
+    <p class="hint">Chinese inspiration needs about 120–150 characters. English needs about 50–70 words.</p>
+
+    <div class="statement" id="statement">
+      <p class="block-label">1. Project theme + who it helps</p>
+      <div class="row">
+        <span>My project theme is</span>
+        <span class="blank wide" data-list="themes" data-key="theme"></span>
+      </div>
+      <div class="row">
+        <span>It mainly helps</span>
+        <span class="blank wide" data-list="beneficiaries" data-key="who"></span>
+      </div>
+
+      <p class="block-label">2. What you invent</p>
+      <div class="row">
+        <span>I want to invent</span>
+        <span class="blank xwide" data-list="inventions" data-key="invention"></span>
+      </div>
+      <div class="row">
+        <span>so they can</span>
+        <span class="blank xwide" data-list="goals" data-key="goal"></span>
+      </div>
+
+      <p class="block-label">3. Source of inspiration</p>
+      <div class="row">
+        <span>The idea first came from</span>
+        <span class="blank wide" data-list="sparks" data-key="spark"></span>
+      </div>
+      <div class="row">
+        <span>What happened (English):</span>
+        <span class="blank free xwide" data-free="1" data-key="detail" data-area="1"></span>
+      </div>
+      <div class="row">
+        <span>發生了甚麼（中文）：</span>
+        <span class="blank free xwide" data-free="1" data-key="detailZh" data-area="1"></span>
+      </div>
+      <div class="row">
+        <span>Trend / issue / person (English):</span>
+        <span class="blank free xwide" data-free="1" data-key="influence" data-area="1"></span>
+      </div>
+      <div class="row">
+        <span>潮流／議題／人物（中文）：</span>
+        <span class="blank free xwide" data-free="1" data-key="influenceZh" data-area="1"></span>
+      </div>
+      <div class="row">
+        <span>This shaped my design by making me</span>
+        <span class="blank free xwide" data-list="shapers" data-key="shape"></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="main" id="previewBtn">Make form draft</button>
+      <button type="button" id="clearBtn">Clear</button>
+      <button type="button" id="randomBtn">Random starter</button>
+    </div>
+
+    <div class="preview-grid" id="preview" hidden>
+      <div class="card">
+        <h2>Form choices</h2>
+        <p class="out" id="choicesOut"></p>
+      </div>
+      <div class="card">
+        <h2>Source of Inspiration — English (50–70 words)</h2>
+        <p class="meta" id="enMeta"></p>
+        <p class="out" id="enOut"></p>
+        <div class="actions">
+          <button type="button" id="copyEn">Copy English</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>靈感來源 — 中文（約 120–150 字）</h2>
+        <p class="meta" id="zhMeta"></p>
+        <p class="out" id="zhOut"></p>
+        <div class="actions">
+          <button type="button" id="copyZh">Copy Chinese</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick">
+      <h2>Quick starters (click to load)</h2>
+      <div class="chips" id="quickChips"></div>
+    </div>
+  </div>
+
+  <script>
+    const LISTS = {
+      themes: [
+        "Education",
+        "Medical and healthcare",
+        "Smart city",
+        "Smart living",
+        "Sustainability",
+        "Creative solutions"
+      ],
+      beneficiaries: [
+        "Children",
+        "Chronic patients",
+        "Family",
+        "General public",
+        "People with disability",
+        "Teenagers/student",
+        "The elderly",
+        "Particular occupation",
+        "Other"
+      ],
+      inventions: [
+        "a focus-timer desk lamp for homework",
+        "a multilingual homework helper app",
+        "a classroom air-quality alert board",
+        "a school lost-and-found QR locker",
+        "a medicine reminder box with lights",
+        "a posture coach wearable for desk work",
+        "a hospital wayfinding bracelet",
+        "a hydration reminder bottle for patients",
+        "a smart bus-stop crowd display",
+        "a flood-warning street sensor kit",
+        "a quiet night parcel locker for estates",
+        "a shared tool library booking app",
+        "a fridge camera that cuts food waste",
+        "a sleep-friendly bedroom light schedule",
+        "a rainwater balcony garden system",
+        "a plastic-bottle brick press for clubs",
+        "a one-button emergency call pendant",
+        "a voice-guided cooking assistant",
+        "a colour-coded recycling sorting game",
+        "a low-vision reading stand with camera",
+        "a cane tip that detects kerbs",
+        "a tinnitus masking earbud set",
+        "an elderly falls-alert floor mat",
+        "a delivery-worker heat-safety vest",
+        "a chef smoke-and-burn alert kitchen pad",
+        "a student mental-health check-in kiosk",
+        "a park exercise coach for seniors",
+        "a smart umbrella share stand"
+      ],
+      goals: [
+        "finish homework with fewer distractions",
+        "understand lessons in two languages",
+        "know when the classroom air is unhealthy",
+        "find lost items without long searches",
+        "take the right medicine on time",
+        "sit more comfortably during long study",
+        "find clinics and wards without getting lost",
+        "drink enough water during recovery",
+        "choose a less crowded bus stop",
+        "get early warnings before heavy rain",
+        "collect parcels without waking neighbours",
+        "borrow tools instead of buying more",
+        "use leftovers before they spoil",
+        "sleep better with calmer night lighting",
+        "water plants with saved rain",
+        "turn bottles into useful garden bricks",
+        "call for help with one simple press",
+        "cook safely following spoken steps",
+        "learn recycling rules through play",
+        "read printed text more easily",
+        "walk outdoors with more confidence",
+        "calm ringing in the ears at night",
+        "alert family after a fall at home",
+        "stay safer while working in hot weather",
+        "notice dangerous smoke or heat early",
+        "ask for support without feeling embarrassed",
+        "exercise outdoors with clear guidance",
+        "borrow an umbrella on sudden rainy days"
+      ],
+      sparks: [
+        "a personal experience",
+        "a conversation with family",
+        "a problem I noticed at school",
+        "something I read online",
+        "a news story / social issue",
+        "a visit to a clinic or hospital",
+        "helping a neighbour",
+        "a trend I kept seeing",
+        "someone's invention that inspired me",
+        "a class discussion or STEM club"
+      ],
+      shapers: [
+        "keep the controls very simple",
+        "add clear lights and sound alerts",
+        "design for one-handed use",
+        "use big text and high contrast",
+        "make it cheap to build with school materials",
+        "focus on safety before fancy features",
+        "support both Chinese and English",
+        "save energy and reduce waste",
+        "work offline when the internet is weak",
+        "protect privacy and avoid storing secrets"
+      ]
+    };
+
+    const STARTERS = [
+      {
+        label: "Medicine box · elderly",
+        theme: "Medical and healthcare",
+        who: "The elderly",
+        invention: "a medicine reminder box with lights",
+        goal: "take the right medicine on time",
+        spark: "a personal experience",
+        detail: "I saw my grandfather mix up morning and night pills on a busy day.",
+        detailZh: "我看見爺爺在忙碌的一天把早晚藥物弄亂了。",
+        influence: "Hong Kong's ageing population and home-care discussions",
+        influenceZh: "香港人口老化與家居照顧討論",
+        shape: "keep the controls very simple"
+      },
+      {
+        label: "Homework lamp · students",
+        theme: "Education",
+        who: "Teenagers/student",
+        invention: "a focus-timer desk lamp for homework",
+        goal: "finish homework with fewer distractions",
+        spark: "a problem I noticed at school",
+        detail: "Friends kept saying phones steal their study time after dinner.",
+        detailZh: "同學常說晚飯後手機令溫習時間被偷走。",
+        influence: "screen-time debates among students",
+        influenceZh: "學生之間關於螢幕時間的討論",
+        shape: "add clear lights and sound alerts"
+      },
+      {
+        label: "Bus crowd · public",
+        theme: "Smart city",
+        who: "General public",
+        invention: "a smart bus-stop crowd display",
+        goal: "choose a less crowded bus stop",
+        spark: "a conversation with family",
+        detail: "My mum queued for a packed minibus while the next stop looked empty.",
+        detailZh: "媽媽在擠塞站頭排隊，下一站卻看起來較空。",
+        influence: "smart transport apps and open city data",
+        influenceZh: "智慧交通應用與城市開放數據",
+        shape: "work offline when the internet is weak"
+      },
+      {
+        label: "Food waste · family",
+        theme: "Smart living",
+        who: "Family",
+        invention: "a fridge camera that cuts food waste",
+        goal: "use leftovers before they spoil",
+        spark: "a personal experience",
+        detail: "We threw away vegetables we forgot at the back of the fridge.",
+        detailZh: "我們把雪櫃深處忘記的蔬菜丟掉了。",
+        influence: "food-waste campaigns and green living trends",
+        influenceZh: "惜食運動與綠色生活潮流",
+        shape: "save energy and reduce waste"
+      },
+      {
+        label: "Bottle bricks · children",
+        theme: "Sustainability",
+        who: "Children",
+        invention: "a plastic-bottle brick press for clubs",
+        goal: "turn bottles into useful garden bricks",
+        spark: "a class discussion or STEM club",
+        detail: "Our eco club collected bottles but had no next step after recycling bins.",
+        detailZh: "環保學會收集了膠瓶，但回收後沒有下一步。",
+        influence: "upcycling makers and school green weeks",
+        influenceZh: "升級再造創客與學校綠色週",
+        shape: "make it cheap to build with school materials"
+      },
+      {
+        label: "Reading stand · disability",
+        theme: "Creative solutions",
+        who: "People with disability",
+        invention: "a low-vision reading stand with camera",
+        goal: "read printed text more easily",
+        spark: "helping a neighbour",
+        detail: "A neighbour asked me to read small print on medicine labels.",
+        detailZh: "鄰居請我幫忙讀藥物標籤上的小字。",
+        influence: "accessible design and inclusive tech",
+        influenceZh: "無障礙設計與共融科技",
+        shape: "use big text and high contrast"
+      },
+      {
+        label: "Heat vest · workers",
+        theme: "Smart living",
+        who: "Particular occupation",
+        invention: "a delivery-worker heat-safety vest",
+        goal: "stay safer while working in hot weather",
+        spark: "a news story / social issue",
+        detail: "Summer heatwaves made outdoor delivery work look exhausting and risky.",
+        detailZh: "夏季熱浪令戶外送貨工作看來又累又危險。",
+        influence: "extreme heat and worker safety reports",
+        influenceZh: "極端炎熱與職業安全報道",
+        shape: "focus on safety before fancy features"
+      },
+      {
+        label: "Falls mat · chronic patients",
+        theme: "Medical and healthcare",
+        who: "Chronic patients",
+        invention: "an elderly falls-alert floor mat",
+        goal: "alert family after a fall at home",
+        spark: "a visit to a clinic or hospital",
+        detail: "A nurse explained how long it can take to notice a fall at home.",
+        detailZh: "護士說明家中跌倒可能很久才被發現。",
+        influence: "home care and ageing-in-place ideas",
+        influenceZh: "居家照顧與居家安老概念",
+        shape: "add clear lights and sound alerts"
+      }
+    ];
+
+    let openBlank = null;
+    let activeIndex = -1;
+    const values = {};
+
+    function mountBlank(host) {
+      const listName = host.dataset.list || "";
+      const free = host.dataset.free === "1";
+      const key = host.dataset.key;
+      const useArea = host.dataset.area === "1";
+      host._listName = listName;
+      host._free = free;
+      host._key = key;
+
+      const input = document.createElement(useArea ? "textarea" : "input");
+      if (!useArea) input.type = "text";
+      input.autocomplete = "off";
+      input.spellcheck = true;
+      input.setAttribute("aria-expanded", "false");
+      host._input = input;
+
+      const suggest = document.createElement("div");
+      suggest.className = "suggest";
+      host._suggest = suggest;
+
+      host.append(input, suggest);
+
+      input.addEventListener("focus", () => openSuggest(host));
+      input.addEventListener("input", () => {
+        values[key] = input.value;
+        if (!free) openSuggest(host);
+        else closeSuggest();
+      });
+      input.addEventListener("keydown", (e) => onBlankKey(e, host));
+      input.addEventListener("blur", () => setTimeout(() => {
+        if (openBlank === host) closeSuggest();
+      }, 120));
+    }
+
+    function alphabetSample(list, perLetter, max) {
+      const out = [];
+      const seen = new Set();
+      const letters = "abcdefghijklmnopqrstuvwxyz";
+      for (const ch of letters) {
+        let n = 0;
+        for (const item of list) {
+          if (item.toLowerCase().startsWith(ch) && !seen.has(item)) {
+            out.push(item);
+            seen.add(item);
+            n++;
+            if (n >= perLetter || out.length >= max) break;
+          }
+        }
+        if (out.length >= max) break;
+      }
+      if (out.length < Math.min(max, list.length)) {
+        for (const item of list) {
+          if (!seen.has(item)) {
+            out.push(item);
+            seen.add(item);
+            if (out.length >= max) break;
+          }
+        }
+      }
+      return out;
+    }
+
+    function filterList(listName, query) {
+      const list = LISTS[listName] || [];
+      const q = query.trim().toLowerCase();
+      if (!q) return alphabetSample(list, 3, 40);
+      const starts = [];
+      const contains = [];
+      for (const item of list) {
+        const low = item.toLowerCase();
+        if (low.startsWith(q)) starts.push(item);
+        else if (low.includes(q)) contains.push(item);
+      }
+      return starts.slice(0, 30).concat(contains.slice(0, 20));
+    }
+
+    function openSuggest(host) {
+      if (host._free && !host._listName) return;
+      closeSuggest(true);
+      openBlank = host;
+      activeIndex = -1;
+      const matches = filterList(host._listName, host._input.value);
+      const box = host._suggest;
+      box.replaceChildren();
+      if (!matches.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No matches — type your own.";
+        box.append(empty);
+      } else {
+        matches.forEach((item, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = item;
+          btn.dataset.index = String(i);
+          btn.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            chooseItem(host, item);
+          });
+          box.append(btn);
+        });
+      }
+      box.classList.add("open");
+      host._input.setAttribute("aria-expanded", "true");
+    }
+
+    function chooseItem(host, item) {
+      host._input.value = item;
+      values[host._key] = item;
+      closeSuggest();
+      host._input.focus();
+    }
+
+    function closeSuggest(keepRef) {
+      if (openBlank && openBlank._suggest) {
+        openBlank._suggest.classList.remove("open");
+        openBlank._input.setAttribute("aria-expanded", "false");
+        if (!keepRef) openBlank = null;
+      } else if (!keepRef) {
+        openBlank = null;
+      }
+      activeIndex = -1;
+    }
+
+    function onBlankKey(e, host) {
+      if (host._free && !host._listName) return;
+      const buttons = [...host._suggest.querySelectorAll("button")];
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (!host._suggest.classList.contains("open")) openSuggest(host);
+        activeIndex = Math.min(activeIndex + 1, buttons.length - 1);
+        paintActive(buttons);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        paintActive(buttons);
+      } else if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
+        if (activeIndex >= 0 && buttons[activeIndex]) {
+          e.preventDefault();
+          chooseItem(host, buttons[activeIndex].textContent);
+        }
+      } else if (e.key === "Escape") {
+        closeSuggest();
+      }
+    }
+
+    function paintActive(buttons) {
+      buttons.forEach((btn, i) => btn.classList.toggle("active", i === activeIndex));
+      if (buttons[activeIndex]) buttons[activeIndex].scrollIntoView({ block: "nearest" });
+    }
+
+    function readValues() {
+      document.querySelectorAll("#statement .blank").forEach((host) => {
+        values[host._key] = host._input.value.trim();
+      });
+      return { ...values };
+    }
+
+    function setValues(data) {
+      document.querySelectorAll("#statement .blank").forEach((host) => {
+        const v = data[host._key] || "";
+        host._input.value = v;
+        values[host._key] = v;
+      });
+    }
+
+    function wordCount(text) {
+      const parts = text.trim().match(/[A-Za-z0-9'’-]+/g);
+      return parts ? parts.length : 0;
+    }
+
+    function zhCount(text) {
+      return [...text.replace(/\s+/g, "")].length;
+    }
+
+    const INV_ZH = {
+      "a focus-timer desk lamp for homework": "帶專注計時的溫習檯燈",
+      "a multilingual homework helper app": "多語功課輔助應用",
+      "a classroom air-quality alert board": "課室空氣質素提示板",
+      "a school lost-and-found QR locker": "學校QR失物櫃",
+      "a medicine reminder box with lights": "發光藥物提醒盒",
+      "a posture coach wearable for desk work": "坐姿提示穿戴裝置",
+      "a hospital wayfinding bracelet": "醫院導航手帶",
+      "a hydration reminder bottle for patients": "喝水提示智能水樽",
+      "a smart bus-stop crowd display": "巴士站人流顯示屏",
+      "a flood-warning street sensor kit": "街道水浸預警感測套件",
+      "a quiet night parcel locker for estates": "屋苑靜音夜間包裹櫃",
+      "a shared tool library booking app": "共享工具圖書館預約應用",
+      "a fridge camera that cuts food waste": "減少食廢的雪櫃相機",
+      "a sleep-friendly bedroom light schedule": "助眠睡房燈光排程",
+      "a rainwater balcony garden system": "陽台雨水花園系統",
+      "a plastic-bottle brick press for clubs": "學會用膠瓶磚壓製器",
+      "a one-button emergency call pendant": "一鍵求助吊墜",
+      "a voice-guided cooking assistant": "語音煮食助理",
+      "a colour-coded recycling sorting game": "顏色分類回收遊戲",
+      "a low-vision reading stand with camera": "低視力放大閱讀支架",
+      "a cane tip that detects kerbs": "路緣感應拐杖頭",
+      "a tinnitus masking earbud set": "耳鳴遮蓋耳塞",
+      "an elderly falls-alert floor mat": "跌倒警示地墊",
+      "a delivery-worker heat-safety vest": "送貨員熱安全背心",
+      "a chef smoke-and-burn alert kitchen pad": "廚師油煙燙傷警示墊",
+      "a student mental-health check-in kiosk": "學生心情簽到機",
+      "a park exercise coach for seniors": "長者公園運動指導柱",
+      "a smart umbrella share stand": "智能雨傘共享站"
+    };
+    const GOAL_ZH = {
+      "finish homework with fewer distractions": "在較少干擾下完成功課",
+      "understand lessons in two languages": "以兩種語言理解課業",
+      "know when the classroom air is unhealthy": "知道課室空氣何時不佳",
+      "find lost items without long searches": "不用長時間尋找失物",
+      "take the right medicine on time": "準時服用正確藥物",
+      "sit more comfortably during long study": "長時間溫習時坐得更舒服",
+      "find clinics and wards without getting lost": "找到診室病房而不迷路",
+      "drink enough water during recovery": "復原期間喝足夠水",
+      "choose a less crowded bus stop": "選擇較少擠迫的巴士站",
+      "get early warnings before heavy rain": "在暴雨前得到預警",
+      "collect parcels without waking neighbours": "取包裹而不吵醒鄰居",
+      "borrow tools instead of buying more": "借工具而不是再買新的",
+      "use leftovers before they spoil": "在食物變壞前用掉剩菜",
+      "sleep better with calmer night lighting": "用更柔和夜燈睡得更好",
+      "water plants with saved rain": "用收集的雨水浇花",
+      "turn bottles into useful garden bricks": "把膠瓶變成有用花園磚",
+      "call for help with one simple press": "按一下就能求助",
+      "cook safely following spoken steps": "跟著語音步驟安全煮食",
+      "learn recycling rules through play": "用遊戲學會回收規則",
+      "read printed text more easily": "更容易閱讀印刷文字",
+      "walk outdoors with more confidence": "更有信心外出步行",
+      "calm ringing in the ears at night": "夜間緩和耳鳴",
+      "alert family after a fall at home": "家中跌倒後通知家人",
+      "stay safer while working in hot weather": "在炎熱天氣工作更安全",
+      "notice dangerous smoke or heat early": "提早發現危險煙熱",
+      "ask for support without feeling embarrassed": "求助時少一點尷尬",
+      "exercise outdoors with clear guidance": "在清晰指導下户外運動",
+      "borrow an umbrella on sudden rainy days": "驟雨時借用雨傘"
+    };
+
+    function fitWords(text, minW, maxW) {
+      let words = text.trim().match(/[A-Za-z0-9'’-]+/g) || [];
+      let out = text.trim();
+      const extras = [
+        " This keeps the project practical for real users.",
+        " I want the design to stay simple enough to prototype at school.",
+        " Clear everyday value matters more than complicated features."
+      ];
+      let i = 0;
+      while (words.length < minW && i < extras.length) {
+        out += extras[i++];
+        words = out.match(/[A-Za-z0-9'’-]+/g) || [];
+      }
+      if (words.length > maxW) {
+        const parts = out.split(/(?<=[.!?])\s+/);
+        while ((out.match(/[A-Za-z0-9'’-]+/g) || []).length > maxW && parts.length > 1) {
+          parts.pop();
+          out = parts.join(" ");
+        }
+      }
+      return out;
+    }
+
+    function fitZh(text, minC, maxC) {
+      let out = text.replace(/\s+/g, "");
+      const extras = [
+        "我也希望作品能在日常生活中被真實使用。",
+        "因此創作方向一直圍繞簡單、安全與可負擔。",
+        "我把觀察到的痛點寫進設計重點。"
+      ];
+      let i = 0;
+      while ([...out].length < minC && i < extras.length) {
+        out += extras[i++];
+      }
+      if ([...out].length > maxC) out = [...out].slice(0, maxC).join("");
+      return out;
+    }
+
+    function buildEnglish(v) {
+      const invention = v.invention || "this invention";
+      const who = v.who || "people who need help";
+      const goal = v.goal || "solve an everyday problem";
+      const spark = v.spark || "a problem I noticed";
+      const detail = v.detail || "I kept seeing the same struggle nearby.";
+      const influence = v.influence || "a wider social issue in our city";
+      const shape = v.shape || "keep the design practical and easy to use";
+      const raw =
+        "My idea began from " + spark + ": " + detail +
+        " It was also shaped by " + influence +
+        ". I decided to invent " + invention + " for " + who +
+        " so they can " + goal +
+        ". This inspiration pushed me to " + shape + ".";
+      return fitWords(raw, 50, 70);
+    }
+
+    function buildChinese(v) {
+      const themeMap = {
+        "Education": "教育",
+        "Medical and healthcare": "醫療與健康",
+        "Smart city": "智慧城市",
+        "Smart living": "智慧生活",
+        "Sustainability": "可持續發展",
+        "Creative solutions": "創意解難"
+      };
+      const whoMap = {
+        "Children": "兒童",
+        "Chronic patients": "長期病患者",
+        "Family": "家庭",
+        "General public": "一般市民",
+        "People with disability": "殘疾人士",
+        "Teenagers/student": "青少年／學生",
+        "The elderly": "長者",
+        "Particular occupation": "特定職業人士",
+        "Other": "其他服務對象"
+      };
+      const sparkMap = {
+        "a personal experience": "一次個人經歷",
+        "a conversation with family": "一次與家人的對話",
+        "a problem I noticed at school": "我在學校觀察到的問題",
+        "something I read online": "我在網上讀到的內容",
+        "a news story / social issue": "一則新聞或社會議題",
+        "a visit to a clinic or hospital": "一次診所或醫院探訪",
+        "helping a neighbour": "幫助鄰居的過程",
+        "a trend I kept seeing": "我反覆看見的潮流現象",
+        "someone's invention that inspired me": "某人發明帶來的啟發",
+        "a class discussion or STEM club": "課堂討論或STEM學會"
+      };
+      const shapeMap = {
+        "keep the controls very simple": "把操作做得極簡單",
+        "add clear lights and sound alerts": "加入清楚的燈光與聲音提示",
+        "design for one-handed use": "設計成可單手使用",
+        "use big text and high contrast": "使用大字與高對比",
+        "make it cheap to build with school materials": "用學校常見物料低成本製作",
+        "focus on safety before fancy features": "把安全放在花巧功能之前",
+        "support both Chinese and English": "同時支援中英文",
+        "save energy and reduce waste": "節省能源並減少浪費",
+        "work offline when the internet is weak": "在網絡不穩時仍可離線運作",
+        "protect privacy and avoid storing secrets": "保護私隱、避免儲存敏感資料"
+      };
+
+      const theme = themeMap[v.theme] || (v.theme || "這個主題");
+      const who = whoMap[v.who] || (v.who || "有需要的人");
+      const spark = sparkMap[v.spark] || (v.spark || "日常生活中的觀察");
+      const detail = v.detailZh || "我發現身邊有人經常遇上同樣困難。";
+      const influence = v.influenceZh || "社會上相關的討論與趨勢";
+      const invention = INV_ZH[v.invention] || "這個發明";
+      const goal = GOAL_ZH[v.goal] || "更輕鬆地解決日常問題";
+      const shape = shapeMap[v.shape] || "讓設計更實用易用";
+
+      const raw =
+        "靈感來自" + spark + "：" + detail +
+        "同時也受到「" + influence + "」影響。" +
+        "我因此想在「" + theme + "」方向，為" + who +
+        "發明" + invention + "，幫助他們" + goal + "。" +
+        "這個靈感讓我決定" + shape +
+        "，把重點放在真實生活需要，而不是只追求複雜功能。";
+      return fitZh(raw, 120, 150);
+    }
+
+    function showPreview() {
+      const v = readValues();
+      const en = buildEnglish(v);
+      const zh = buildChinese(v);
+      const enWords = wordCount(en);
+      const zhChars = zhCount(zh);
+
+      document.getElementById("preview").hidden = false;
+      document.getElementById("choicesOut").textContent =
+        "Theme: " + (v.theme || "—") + "\n" +
+        "Beneficiary: " + (v.who || "—") + "\n" +
+        "Invention: " + (v.invention || "—") + "\n" +
+        "Goal: " + (v.goal || "—");
+
+      document.getElementById("enOut").textContent = en;
+      document.getElementById("zhOut").textContent = zh;
+
+      const enMeta = document.getElementById("enMeta");
+      enMeta.textContent = enWords + " words (target 50–70)";
+      enMeta.className = "meta " + (enWords >= 50 && enWords <= 70 ? "ok" : "bad");
+
+      const zhMeta = document.getElementById("zhMeta");
+      zhMeta.textContent = zhChars + " 字 (target 120–150)";
+      zhMeta.className = "meta " + (zhChars >= 120 && zhChars <= 150 ? "ok" : "bad");
+    }
+
+    async function copyText(id, btn) {
+      const text = document.getElementById(id).textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(() => { btn.textContent = old; }, 1000);
+      } catch (_) {
+        btn.textContent = "Select and copy manually";
+      }
+    }
+
+    document.querySelectorAll("#statement .blank").forEach(mountBlank);
+
+    const chips = document.getElementById("quickChips");
+    STARTERS.forEach((s) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = s.label;
+      btn.addEventListener("click", () => {
+        setValues(s);
+        showPreview();
+        window.scrollTo({ top: document.getElementById("preview").offsetTop - 20, behavior: "smooth" });
+      });
+      chips.append(btn);
+    });
+
+    document.getElementById("previewBtn").addEventListener("click", showPreview);
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      setValues({});
+      document.getElementById("preview").hidden = true;
+    });
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      const s = STARTERS[Math.floor(Math.random() * STARTERS.length)];
+      setValues(s);
+      showPreview();
+    });
+    document.getElementById("copyEn").addEventListener("click", (e) => copyText("enOut", e.currentTarget));
+    document.getElementById("copyZh").addEventListener("click", (e) => copyText("zhOut", e.currentTarget));
+  </script>
+</body>
+</html>
